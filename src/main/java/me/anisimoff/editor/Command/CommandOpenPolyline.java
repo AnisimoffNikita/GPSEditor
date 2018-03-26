@@ -10,7 +10,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 public class CommandOpenPolyline extends Command {
     private final File opened;
@@ -24,30 +23,27 @@ public class CommandOpenPolyline extends Command {
         if (opened == null) {
             return false;
         }
+        backup = model.getState();
 
-        String polyline = null;
+        String polyline;
         try {
             polyline = Utils.readToLine(opened);
         } catch (IOException e) {
             return false;
         }
 
-        List<Point> pathList = PolylineEncoder.decode(polyline);
-        ArrayList<Point> path = new ArrayList<>(pathList);
+        ArrayList<Point> path = new ArrayList<>(PolylineEncoder.decode(polyline));
 
         Route route = new Route(opened.getName(), path, new Date());
 
-        backup = model.getState();
+        model.setState(State.NotModifiedRoute(route));
 
-        State state = State.NewRoute(route);
-
-        model.setState(state);
-
-        return true;
+        return model.saveRoute();
     }
 
     @Override
     public void undo() {
+        model.removeRoute();
         model.setState(backup);
     }
 }

@@ -23,14 +23,14 @@ public class CommandNew extends Command {
             route.setName(String.format("%s(%d)", Constants.UNTITLED, index));
         }
 
-        State state = State.NewRoute(route);
-        model.setState(state);
+        model.setState(State.NotModifiedRoute(route));
 
-        return true;
+        return model.saveRoute();
     }
 
     @Override
     public void undo() {
+        model.removeRoute();
         model.setState(backup);
     }
 

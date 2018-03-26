@@ -1,6 +1,5 @@
 package me.anisimoff.editor.View;
 
-import me.anisimoff.editor.Point;
 import me.anisimoff.editor.Presenter.Presenter;
 import me.anisimoff.editor.Route;
 
@@ -8,6 +7,7 @@ import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import java.io.File;
 import java.util.List;
+import java.util.Vector;
 
 public class Editor implements View {
     private JPanel mainPanel;
@@ -136,9 +136,6 @@ public class Editor implements View {
                 case JOptionPane.CANCEL_OPTION:
                     return false;
                 case JOptionPane.NO_OPTION:
-                    if (presenter.isNew()) {
-                        presenter.removeSelectedRoute();
-                    }
                     break;
                 case JOptionPane.YES_OPTION:
                     presenter.saveRoute();
@@ -217,4 +214,13 @@ public class Editor implements View {
         redoButton.setEnabled(state);
     }
 
+    @Override
+    public void setSaveButtonEnabled(boolean state) {
+        saveButton.setEnabled(state);
+    }
+
+    @Override
+    public void setRemoveButtonEnabled(boolean state) {
+        removeSelectedRouteButton.setEnabled(state);
+    }
 }

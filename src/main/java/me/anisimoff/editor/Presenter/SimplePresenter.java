@@ -19,6 +19,7 @@ public class SimplePresenter implements Presenter {
         this.model = model;
 
         view.setRouteList(model.loadAllRoutes());
+
     }
 
     @Override
@@ -94,7 +95,7 @@ public class SimplePresenter implements Presenter {
     public void undo() {
         if (model.undo()) {
             view.setRouteList(model.loadAllRoutes());
-            if (model.getState() != null) {
+            if (!model.isNone()) {
                 view.setSelectionByName(model.getState().getRoute());
             } else {
                 view.cancelSelection();
@@ -116,7 +117,7 @@ public class SimplePresenter implements Presenter {
     public void redo() {
         if (model.redo()) {
             view.setRouteList(model.loadAllRoutes());
-            if (model.getState() != null) {
+            if (!model.isNone()) {
                 view.setSelectionByName(model.getState().getRoute());
             } else {
                 view.cancelSelection();
@@ -135,14 +136,9 @@ public class SimplePresenter implements Presenter {
     @Override
     public boolean needSave() {
         State route = model.getState();
-        return route != null && (route.isNew() || route.isModified());
+        return route.isModified();
     }
 
-    @Override
-    public boolean isNew() {
-        State route = model.getState();
-        return route.isNew();
-    }
 
     @Override
     public void edited(int index, Point point) {
@@ -167,7 +163,7 @@ public class SimplePresenter implements Presenter {
 
     @Override
     public boolean canSelect() {
-        return !needSave();
+        return needSave();
     }
 
 

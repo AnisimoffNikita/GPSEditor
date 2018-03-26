@@ -17,7 +17,7 @@ public class DatabaseModel implements Model {
         database = new Database();
         undoHistory = new CommandHistory();
         redoHistory = new CommandHistory();
-        state = null;
+        state = new State();
     }
 
     @Override
@@ -27,15 +27,26 @@ public class DatabaseModel implements Model {
 
     @Override
     public boolean saveRoute() {
-        if (nullState()) {
+        if (isNone()) {
             return false;
         }
 
-        if (state.isNew()) {
-            return database.insertRoute(getRoute());
-        } else {
-            return database.updateRoute(getRoute());
+        int id = database.insertRoute(getRoute());
+        if (id == -1) {
+            return false;
         }
+        state.getRoute().setId(id);
+
+        return true;
+    }
+
+    @Override
+    public boolean updateRoute() {
+        if (isNone()) {
+            return false;
+        }
+
+        return database.updateRoute(getRoute());
     }
 
     @Override
@@ -45,12 +56,12 @@ public class DatabaseModel implements Model {
 
     @Override
     public boolean removeRoute() {
-        if (nullState()) {
+        if (isNone()) {
             return false;
         }
         boolean result = database.removeRoute(getRoute().getId());
         if (result) {
-            state = null;
+            state = State.NoneRoute();
         }
 
         return result;
@@ -73,7 +84,7 @@ public class DatabaseModel implements Model {
 
     @Override
     public Route getRoute() {
-        if (nullState()) {
+        if (isNone()) {
             return null;
         }
         return state.getRoute();
@@ -124,7 +135,7 @@ public class DatabaseModel implements Model {
     }
 
     @Override
-    public boolean nullState() {
-        return state == null;
+    public boolean isNone() {
+        return state.isNone();
     }
 }

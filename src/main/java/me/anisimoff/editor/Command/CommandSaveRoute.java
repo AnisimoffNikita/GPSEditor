@@ -12,9 +12,13 @@ public class CommandSaveRoute extends Command {
     public boolean execute() {
         State state = model.getState();
 
+        if(model.isNone()) {
+            return false;
+        }
+
         backup = state;
 
-        boolean result = model.saveRoute();
+        boolean result = model.updateRoute();
 
         if (result) {
             state.setNotModified();
@@ -26,6 +30,6 @@ public class CommandSaveRoute extends Command {
     @Override
     public void undo() {
         model.setState(backup);
-        model.saveRoute();
+        model.updateRoute();
     }
 }

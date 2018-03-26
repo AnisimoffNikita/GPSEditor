@@ -12,12 +12,13 @@ public class CommandRemoveRoute extends Command {
     public boolean execute() {
         backup = model.getState();
 
-        return model.removeRoute();
+        return !model.isNone() && model.removeRoute();
+
     }
 
     @Override
     public void undo() {
         model.setState(backup);
-        model.saveRoute();
+        model.updateRoute();
     }
 }

@@ -72,6 +72,10 @@ public class Route {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public void insertAfter(int index, Point point) {
         path.add(index + 1, point);
     }

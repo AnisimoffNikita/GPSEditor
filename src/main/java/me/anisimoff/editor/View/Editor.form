@@ -45,6 +45,7 @@
           <component id="aa1e" class="javax.swing.JButton" binding="removeSelectedRouteButton" default-binding="true">
             <constraints/>
             <properties>
+              <enabled value="true"/>
               <text value="Remove selected route"/>
             </properties>
           </component>

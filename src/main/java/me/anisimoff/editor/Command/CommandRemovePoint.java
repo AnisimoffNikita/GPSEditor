@@ -12,7 +12,7 @@ public class CommandRemovePoint extends Command {
 
     @Override
     public boolean execute() {
-        if (model.nullState()) {
+        if (model.isNone()) {
             return false;
         }
         backup = model.getState();

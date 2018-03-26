@@ -54,19 +54,21 @@ class Database {
         return index + 1;
     }
 
-    public boolean insertRoute(Route route) {
+    public int insertRoute(Route route) {
 
         String sql = "insert into routes(name,polyline,creationDate) values(?,?,?)";
-        boolean result = true;
+        int result;
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, route.getName());
             pstmt.setString(2, PolylineEncoder.encode(route.getPath()));
             pstmt.setLong(3, route.getDate().getTime());
             pstmt.executeUpdate();
+            result = lastInsertedId();
         } catch (SQLException e) {
-            result = false;
+            result = -1;
         }
+
         return result;
     }
 
@@ -147,6 +149,22 @@ class Database {
         }
 
         return routes;
+    }
+
+    private int lastInsertedId () {
+        String sql = "select last_insert_rowid();";
+        int index = -1;
+
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            if (rs.next()) {
+                index = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+        }
+
+        return index;
     }
 
     private void connect() {

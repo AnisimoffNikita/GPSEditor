@@ -10,6 +10,8 @@ public interface Model {
 
     boolean saveRoute();
 
+    boolean updateRoute();
+
     boolean removeRoute();
 
     Route loadRouteByName(String name);
@@ -20,7 +22,7 @@ public interface Model {
 
     void setState(State state);
 
-    boolean nullState();
+    boolean isNone();
 
     Route getRoute();
 

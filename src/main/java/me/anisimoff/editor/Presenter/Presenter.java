@@ -32,6 +32,4 @@ public interface Presenter extends
     void removeSelectedPoint(int index);
 
     boolean needSave();
-
-    boolean isNew();
 }

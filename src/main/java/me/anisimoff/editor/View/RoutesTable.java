@@ -9,6 +9,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
 
 public class RoutesTable extends JPanel {
     private JTable table;
@@ -114,7 +116,7 @@ public class RoutesTable extends JPanel {
         DataModel model = (DataModel)table.getModel();
         int i = model.getRowCount();
         model.addRow(new Object[] {route.getName(), route.getLength(), route.getDate()});
-        table.setRowSelectionInterval(i,i);
+        setSelection(i);
     }
 
     public void removeSelected() {
@@ -146,6 +148,7 @@ public class RoutesTable extends JPanel {
 
         for (int i = 0; i < model.getRowCount(); i++) {
             if (model.getValueAt(i, 0).equals(name)) {
+
                 setSelection(i);
                 return;
             }
@@ -153,6 +156,29 @@ public class RoutesTable extends JPanel {
 
         cancelSelection();
     }
+
+    public Vector<Vector<String>> getRawRoutes() {
+        Vector<Vector<String>> routes = new Vector<>();
+        DataModel model = getModel();
+        for (int i = 0; i < table.getRowCount(); i++) {
+            Vector<String> row = new Vector<>();
+            for (int j = 0; j < table.getColumnCount(); j++) {
+                row.add(model.getValueAt(i, j).toString());
+            }
+            routes.add(row);
+        }
+        return routes;
+    }
+
+
+    public void setRawRoutes(Vector<Vector<String>> raw) {
+        DataModel model = getModel();
+        model.setRowCount(0);
+        for (int i = 0; i < raw.size(); i++) {
+            model.addRow(raw.get(i));
+        }
+    }
+
 
 
     private void updateRoute(int i, Route route) {

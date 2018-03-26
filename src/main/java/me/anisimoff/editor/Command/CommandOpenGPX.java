@@ -21,6 +21,8 @@ public class CommandOpenGPX extends Command {
             return false;
         }
 
+        backup = model.getState();
+
         Route route;
         try {
             route = GPXReader.parse(opened);
@@ -29,16 +31,14 @@ public class CommandOpenGPX extends Command {
             return false;
         }
 
-        backup = model.getState();
+        model.setState(State.NotModifiedRoute(route));
 
-        State state = State.NewRoute(route);
-        model.setState(state);
-
-        return true;
+        return model.saveRoute();
     }
 
     @Override
     public void undo() {
+        model.removeRoute();
         model.setState(backup);
     }
 }

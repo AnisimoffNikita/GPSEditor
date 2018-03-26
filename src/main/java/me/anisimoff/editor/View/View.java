@@ -5,6 +5,7 @@ import me.anisimoff.editor.Presenter.Presenter;
 import me.anisimoff.editor.Route;
 
 import java.util.List;
+import java.util.Vector;
 
 public interface View {
     void setPresenter(Presenter presenter);
@@ -24,6 +25,10 @@ public interface View {
     void setUndoEnabled(boolean state);
 
     void setRedoEnabled(boolean state);
+
+    void setSaveButtonEnabled(boolean state);
+
+    void setRemoveButtonEnabled(boolean state);
 
     void setSelectionByName(Route route);
 }

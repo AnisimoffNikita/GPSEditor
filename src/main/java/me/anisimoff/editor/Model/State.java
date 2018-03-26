@@ -1,20 +1,31 @@
 package me.anisimoff.editor.Model;
 
+import me.anisimoff.editor.Point;
 import me.anisimoff.editor.Route;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
+
 public class State {
-    private enum RouteState {NEW, MODIFIED, NOT_MODIFIED}
+    private enum RouteState {NONE, NEW, MODIFIED, NOT_MODIFIED}
 
     private Route route;
     private RouteState state;
+
+    public State() {
+        this.route = null;
+        this.state = RouteState.NONE;
+    }
 
     private State(Route route, RouteState state) {
         this.state = state;
         this.route = route;
     }
 
-    public static State NewRoute(Route route) {
-        return new State(route, RouteState.NEW);
+
+    public static State NoneRoute() {
+        return new State(null, RouteState.NONE);
     }
 
     public static State ModifiedRoute(Route route) {
@@ -29,20 +40,12 @@ public class State {
         return state;
     }
 
-    public void setState(RouteState state) {
-        this.state = state;
-    }
-
     public Route getRoute() {
         return route;
     }
 
-    public void setRoute(Route route) {
-        this.route = route;
-    }
-
-    public boolean isNew(){
-        return state == RouteState.NEW;
+    public boolean isNone(){
+        return state == RouteState.NONE;
     }
 
     public boolean isModified() {
@@ -53,9 +56,10 @@ public class State {
         return state == RouteState.NOT_MODIFIED;
     }
 
-    public void setNew(){
-        state = RouteState.NEW;
+    public void setNone(){
+        state = RouteState.NONE;
     }
+
 
     public void setModified() {
         state = RouteState.MODIFIED;

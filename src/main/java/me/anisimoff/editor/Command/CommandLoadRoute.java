@@ -4,6 +4,8 @@ import me.anisimoff.editor.Model.Model;
 import me.anisimoff.editor.Route;
 import me.anisimoff.editor.Model.State;
 
+import java.util.Vector;
+
 public class CommandLoadRoute extends Command {
     private final String name;
     public CommandLoadRoute(Model model, String name) {
@@ -22,6 +24,7 @@ public class CommandLoadRoute extends Command {
         }
 
         model.setState(State.NotModifiedRoute(route));
+
         return true;
     }
 
