@@ -1,26 +1,28 @@
-package me.anisimoff.editor;
+package me.anisimoff.editor.Model;
 
-public class StatedRoute {
+import me.anisimoff.editor.Route;
+
+public class State {
     private enum RouteState {NEW, MODIFIED, NOT_MODIFIED};
 
     private Route route;
     private RouteState state;
 
-    private StatedRoute(Route route, RouteState state) {
+    private State(Route route, RouteState state) {
         this.state = state;
         this.route = route;
     }
 
-    public static StatedRoute NewRoute(Route route) {
-        return new StatedRoute(route, RouteState.NEW);
+    public static State NewRoute(Route route) {
+        return new State(route, RouteState.NEW);
     }
 
-    public static StatedRoute ModifiedRoute(Route route) {
-        return new StatedRoute(route, RouteState.MODIFIED);
+    public static State ModifiedRoute(Route route) {
+        return new State(route, RouteState.MODIFIED);
     }
 
-    public static StatedRoute NotModifiedRoute(Route route) {
-        return new StatedRoute(route, RouteState.NOT_MODIFIED);
+    public static State NotModifiedRoute(Route route) {
+        return new State(route, RouteState.NOT_MODIFIED);
     }
 
     public RouteState getState() {

@@ -1,9 +1,11 @@
 package me.anisimoff.editor.Command;
 
 import me.anisimoff.editor.*;
-import me.anisimoff.editor.GUI.Editor;
+import me.anisimoff.editor.Model.Model;
+import me.anisimoff.editor.Model.State;
+import me.anisimoff.editor.Utils.PolylineEncoder;
+import me.anisimoff.editor.Utils.Utils;
 
-import javax.swing.filechooser.FileFilter;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,22 +13,14 @@ import java.util.Date;
 import java.util.List;
 
 public class CommandOpenPolyline extends Command {
-    public CommandOpenPolyline(Editor editor) {
-        super(editor);
+    File opened;
+    public CommandOpenPolyline(Model model, File opened) {
+        super(model);
+        this.opened = opened;
     }
 
     @Override
     public boolean execute(){
-        File opened = Utils.openDialog(new FileFilter() {
-            public String getDescription() {
-                return "Polyline file (*.pl)";
-            }
-
-            public boolean accept(File f) {
-                return f.isDirectory() || f.getName().toLowerCase().endsWith(".pl");
-            }
-        }, "Open Polyline");
-
         if (opened == null) {
             return false;
         }
@@ -43,17 +37,17 @@ public class CommandOpenPolyline extends Command {
 
         Route route = new Route(opened.getName(), path, new Date());
 
-        backup = editor.getStatedRoute();
+        backup = model.getState();
 
-        StatedRoute statedRoute = StatedRoute.NewRoute(route);
-        editor.setStatedRoute(statedRoute);
+        State state = State.NewRoute(route);
+
+        model.setState(state);
 
         return true;
     }
 
     @Override
     public void undo() {
-        editor.removeCurrentRoute();
-        editor.setStatedRoute(backup);
+        model.setState(backup);
     }
 }

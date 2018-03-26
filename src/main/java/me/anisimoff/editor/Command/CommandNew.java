@@ -1,39 +1,37 @@
 package me.anisimoff.editor.Command;
 
 import me.anisimoff.editor.Constants;
+import me.anisimoff.editor.Model.Model;
 import me.anisimoff.editor.Route;
-import me.anisimoff.editor.StatedRoute;
-import me.anisimoff.editor.Utils;
-import me.anisimoff.editor.GUI.Editor;
+import me.anisimoff.editor.Model.State;
 
 public class CommandNew extends Command {
 
 
-    public CommandNew(Editor editor) {
-        super(editor);
+    public CommandNew(Model model) {
+        super(model);
     }
 
     @Override
     public boolean execute() {
-        backup = editor.getStatedRoute();
+        backup = model.getState();
 
         Route route = new Route();
 
-        int index = editor.getDatabase().getUntitledCount();
+        int index = model.getUntitledNextIndex();
         if (index != 0) {
             route.setName(String.format("%s(%d)", Constants.UNTITLED, index));
         }
 
-        StatedRoute statedRoute = StatedRoute.NewRoute(route);
-        editor.setStatedRoute(statedRoute);
+        State state = State.NewRoute(route);
+        model.setState(state);
 
         return true;
     }
 
     @Override
     public void undo() {
-        editor.removeCurrentRoute();
-        editor.setStatedRoute(backup);
+        model.setState(backup);
     }
 
 }

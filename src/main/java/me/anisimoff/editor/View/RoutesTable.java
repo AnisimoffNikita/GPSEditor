@@ -1,4 +1,4 @@
-package me.anisimoff.editor.GUI;
+package me.anisimoff.editor.View;
 
 import me.anisimoff.editor.Route;
 
@@ -87,7 +87,6 @@ public class RoutesTable extends JPanel {
         tableSelectionListeners.add(listener);
     }
 
-
     public void addTableSelectedListener(TableSelectedListener listener) {
         tableSelectedListeners.add(listener);
     }
@@ -97,16 +96,16 @@ public class RoutesTable extends JPanel {
             table.clearSelection();
             return;
         }
+        int index = table.getSelectedRow();
+        setRow(index, route);
+    }
+
+    public void addRoute(Route route) {
         DataModel model = (DataModel)table.getModel();
-        String name = route.getName();
-        int i;
-        for (i = 0; i < model.getRowCount(); i++) {
-            if (name.equals(model.getValueAt(i, 0))) {
-                setRow(i, route);
-                return;
-            }
-        }
-        addRow(route);
+        int i = model.getRowCount();
+        model.addRow(new Object[] {route.getName(), route.getLength(), route.getDate()});
+        table.setRowSelectionInterval(i, i);
+        index = i;
     }
 
     private void setRow(int i, Route route) {
@@ -118,13 +117,6 @@ public class RoutesTable extends JPanel {
         index = i;
     }
 
-    private void addRow(Route route) {
-        DataModel model = (DataModel)table.getModel();
-        int i = model.getRowCount();
-        model.addRow(new Object[] {route.getName(), route.getLength(), route.getDate()});
-        table.setRowSelectionInterval(i, i);
-        index = i;
-    }
 
 
     public void removeSelected() {
@@ -143,9 +135,15 @@ public class RoutesTable extends JPanel {
 
     public void addList(java.util.List<Route> routes) {
         for (Route route : routes) {
-            addRow(route);
+            addRoute(route);
         }
         index = -1;
         table.clearSelection();
     }
+
+    public String getSelectedName(){
+        int row = table.getSelectedRow();
+        return table.getValueAt(row,0).toString();
+    }
+
 }

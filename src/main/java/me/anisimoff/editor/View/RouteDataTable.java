@@ -1,10 +1,11 @@
-package me.anisimoff.editor.GUI;
+package me.anisimoff.editor.View;
 
 import me.anisimoff.editor.Point;
-import me.anisimoff.editor.PolylineEncoder;
+import me.anisimoff.editor.Utils.PolylineEncoder;
 import me.anisimoff.editor.Route;
 
 import javax.swing.*;
+import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.ArrayList;
@@ -15,8 +16,9 @@ public class RouteDataTable extends JPanel {
     private JPanel panel;
     private JTextField routeNameField;
     private JTextField polylineField;
-    Date creationDate;
+    private Date creationDate;
 
+    private ArrayList<TableFinishEditingListener> tableFinishEditingListeners;
 
     private class DataModel extends DefaultTableModel {
         String[] columns = {"Latitude", "Longitude"};
@@ -37,17 +39,24 @@ public class RouteDataTable extends JPanel {
         setLayout(new BorderLayout());
         table.setModel(new DataModel());
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-    }
+        tableFinishEditingListeners = new ArrayList<>();
 
-    public void setControls(JButton addPointButton, JButton removePointButton) {
-        addPointButton.addActionListener(e -> {
-            int index = table.getSelectedRow() + 1;
-            addRow(index, 0, 0);
-        });
-
-        removePointButton.addActionListener(e -> {
-            int index = table.getSelectedRow();
-            removeRow(index);
+        table.getModel().addTableModelListener(e -> {
+            if (e.getType() == TableModelEvent.UPDATE) {
+                int i = table.getSelectedRow();
+                DataModel model = getModel();
+                Point point = null;
+                try {
+                    double latitude = Double.parseDouble(model.getValueAt(i, 0).toString());
+                    double longitude = Double.parseDouble(model.getValueAt(i, 1).toString());
+                    point = new Point(latitude, longitude);
+                } catch (NumberFormatException | NullPointerException ignored) {
+                    point = null;
+                }
+                for (TableFinishEditingListener listener : tableFinishEditingListeners) {
+                    listener.edited(i, point);
+                }
+            }
         });
     }
 
@@ -68,7 +77,7 @@ public class RouteDataTable extends JPanel {
         }
     }
 
-    public Route getRoute() throws PointParseException {
+    public Route getRoute() {
         String name = routeNameField.getText();
         ArrayList<Point> path = new ArrayList<>();
         DataModel model = getModel();
@@ -81,7 +90,7 @@ public class RouteDataTable extends JPanel {
                 path.add(new Point(latitude, longitude));
             }
         } catch (NumberFormatException | NullPointerException ignored) {
-            throw new PointParseException();
+            return null;
         }
 
         return new Route(name, path, creationDate);
@@ -91,6 +100,10 @@ public class RouteDataTable extends JPanel {
         routeNameField.setText("");
         polylineField.setText("");
         getModel().setRowCount(0);
+    }
+
+    public int getSelectedIndex() {
+        return table.getSelectedRow();
     }
 
     private DataModel getModel() {
@@ -114,4 +127,10 @@ public class RouteDataTable extends JPanel {
             model.removeRow(index);
         }
     }
+
+
+    public void addFinishEditingListener(TableFinishEditingListener listener) {
+        tableFinishEditingListeners.add(listener);
+    }
+
 }

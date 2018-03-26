@@ -1,10 +1,13 @@
 package me.anisimoff.editor.Command;
 
-import me.anisimoff.editor.GUI.Editor;
+import me.anisimoff.editor.Model.Model;
 
 public class CommandAddPoint extends Command {
-    public CommandAddPoint(Editor editor) {
-        super(editor);
+    int index;
+
+    public CommandAddPoint(Model model, int index) {
+        super(model);
+        this.index = index;
     }
 
     @Override

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="me.anisimoff.editor.GUI.Editor">
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="me.anisimoff.editor.View.Editor">
   <grid id="27dc6" binding="mainPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
     <constraints>
       <xy x="20" y="52" width="821" height="598"/>
@@ -103,13 +103,13 @@
               </vspacer>
             </children>
           </grid>
-          <nested-form id="a18f9" form-file="me/anisimoff/editor/GUI/RoutesTable.form" binding="routesTable">
+          <nested-form id="a18f9" form-file="me/anisimoff/editor/View/RoutesTable.form" binding="routesTable">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
               <gridbag top="5" left="5" bottom="5" right="5" weightx="1.0" weighty="1.0"/>
             </constraints>
           </nested-form>
-          <nested-form id="29aa9" form-file="me/anisimoff/editor/GUI/RouteDataTable.form" binding="routeDataTable">
+          <nested-form id="29aa9" form-file="me/anisimoff/editor/View/RouteDataTable.form" binding="routeDataTable">
             <constraints>
               <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
               <gridbag top="5" left="5" bottom="5" right="5" weightx="1.0" weighty="1.0"/>

@@ -1,14 +1,10 @@
 package me.anisimoff.editor.Command;
 
 import me.anisimoff.editor.Model.Model;
-import me.anisimoff.editor.View.Editor;
 
-public class CommandRemovePoint extends Command {
-    int index;
-
-    public CommandRemovePoint(Model model, int index) {
+public class CommandRename extends Command {
+    public CommandRename(Model model) {
         super(model);
-        this.index = index;
     }
 
     @Override

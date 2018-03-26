@@ -1,10 +1,10 @@
-package me.anisimoff.editor;
+package me.anisimoff.editor.Utils;
 
 import com.google.maps.internal.PolylineEncoding;
 import com.google.maps.model.LatLng;
+import me.anisimoff.editor.Point;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class PolylineEncoder {

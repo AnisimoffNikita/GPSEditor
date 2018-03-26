@@ -1,32 +1,32 @@
 package me.anisimoff.editor.Command;
 
-import me.anisimoff.editor.GUI.Editor;
+import me.anisimoff.editor.Model.Model;
 import me.anisimoff.editor.Route;
-import me.anisimoff.editor.StatedRoute;
+import me.anisimoff.editor.Model.State;
 
 public class CommandLoadRoute extends Command {
     String name;
-    public CommandLoadRoute(Editor editor, String name) {
-        super(editor);
+    public CommandLoadRoute(Model model, String name) {
+        super(model);
         this.name = name;
     }
 
     @Override
     public boolean execute() {
-        Route route = editor.getDatabase().loadRouteByName(name);
+        Route route = model.loadRouteByName(name);
 
-        backup = editor.getStatedRoute();
+        backup = model.getState();
 
         if (route == null){
             return false;
         }
 
-        editor.setStatedRoute(StatedRoute.NotModifiedRoute(route));
+        model.setState(State.NotModifiedRoute(route));
         return true;
     }
 
     @Override
     public void undo() {
-        editor.setStatedRoute(backup);
+        model.setState(backup);
     }
 }

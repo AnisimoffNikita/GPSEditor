@@ -1,14 +1,14 @@
 package me.anisimoff.editor.Command;
 
-import me.anisimoff.editor.StatedRoute;
-import me.anisimoff.editor.GUI.Editor;
+import me.anisimoff.editor.Model.Model;
+import me.anisimoff.editor.Model.State;
 
 public abstract class Command {
-    protected Editor editor;
-    protected StatedRoute backup;
+    protected Model model;
+    protected State backup;
 
-    public Command(Editor editor) {
-        this.editor = editor;
+    public Command(Model model) {
+        this.model = model;
     }
 
     public abstract boolean execute();

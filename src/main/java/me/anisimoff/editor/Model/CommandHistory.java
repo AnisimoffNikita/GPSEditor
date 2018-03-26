@@ -1,4 +1,4 @@
-package me.anisimoff.editor;
+package me.anisimoff.editor.Model;
 
 import me.anisimoff.editor.Command.Command;
 

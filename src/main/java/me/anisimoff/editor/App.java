@@ -1,16 +1,22 @@
 package me.anisimoff.editor;
 
-import me.anisimoff.editor.Model.Database;
-import me.anisimoff.editor.GUI.Editor;
+import me.anisimoff.editor.Model.SimpleModel;
+import me.anisimoff.editor.Presenter.SimplePresenter;
+import me.anisimoff.editor.Utils.Utils;
+import me.anisimoff.editor.View.Editor;
+import me.anisimoff.editor.View.View;
+
+import javax.swing.*;
 
 public class App {
 
     public static void main(String[] args) {
-        Utils.createConfigDir();
-        Database db = new Database();
 
-        Editor editor = new Editor(db);
-        editor.setupGUI();
+        SwingUtilities.invokeLater(() -> {
+            Utils.createConfigDir();
+            View view = new Editor();
+            view.setPresenter(new SimplePresenter(view, new SimpleModel()));
+        });
     }
 
 }

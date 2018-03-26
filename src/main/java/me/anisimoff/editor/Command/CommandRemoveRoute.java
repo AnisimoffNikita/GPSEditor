@@ -1,26 +1,23 @@
 package me.anisimoff.editor.Command;
 
-import me.anisimoff.editor.GUI.Editor;
+import me.anisimoff.editor.Model.Model;
 
 public class CommandRemoveRoute extends Command {
 
-    public CommandRemoveRoute(Editor editor) {
-        super(editor);
+    public CommandRemoveRoute(Model model) {
+        super(model);
     }
 
     @Override
     public boolean execute() {
-        backup = editor.getStatedRoute();
+        backup = model.getState();
 
-        editor.removeCurrentRoute();
-
-        return editor.getDatabase().removeRouteByName(backup.getRoute().getName());
+        return model.removeSelectedRoute();
     }
 
     @Override
     public void undo() {
-        editor.setStatedRoute(backup);
-
-        editor.getDatabase().saveRoute(backup.getRoute());
+        model.setState(backup);
+        model.saveRoute();
     }
 }

@@ -1,8 +1,10 @@
-package me.anisimoff.editor;
+package me.anisimoff.editor.Utils;
 
 import io.jenetics.jpx.GPX;
 import io.jenetics.jpx.Track;
 import io.jenetics.jpx.TrackSegment;
+import me.anisimoff.editor.Point;
+import me.anisimoff.editor.Route;
 
 import java.io.File;
 import java.io.IOException;

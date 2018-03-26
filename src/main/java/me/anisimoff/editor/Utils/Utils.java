@@ -1,4 +1,6 @@
-package me.anisimoff.editor;
+package me.anisimoff.editor.Utils;
+
+import me.anisimoff.editor.Constants;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
@@ -9,9 +11,7 @@ import java.nio.file.Paths;
 
 public class Utils {
 
-    static int checkSaveDialog(String name) {
-        return JOptionPane.showConfirmDialog(null, "Save?", name, JOptionPane.YES_NO_CANCEL_OPTION);
-    }
+
 
     public static File openDialog(FileFilter filter, String header) {
         JFileChooser openDialog = new JFileChooser();
