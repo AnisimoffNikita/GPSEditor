@@ -10,7 +10,7 @@ public interface Model {
 
     boolean saveRoute();
 
-    boolean removeSelectedRoute();
+    boolean removeRoute();
 
     Route loadRouteByName(String name);
 
@@ -18,17 +18,21 @@ public interface Model {
 
     State getState();
 
-    void setState(State route);
+    void setState(State state);
+
+    boolean nullState();
+
+    Route getRoute();
+
+    boolean executeCommand(Command command);
 
     boolean undo();
 
     boolean redo();
 
-    boolean executeCommand(Command command);
-
     boolean undoEmpty();
 
-    void clearHistory();
-
     boolean redoEmpty();
+
+    void clearHistory();
 }

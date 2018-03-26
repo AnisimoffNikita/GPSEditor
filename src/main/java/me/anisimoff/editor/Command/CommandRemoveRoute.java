@@ -12,7 +12,7 @@ public class CommandRemoveRoute extends Command {
     public boolean execute() {
         backup = model.getState();
 
-        return model.removeSelectedRoute();
+        return model.removeRoute();
     }
 
     @Override

@@ -58,10 +58,12 @@ public class Route {
         this.path = path;
     }
 
-
     public void insertAfter(int index, Point point) {
         path.add(index + 1, point);
     }
+
+    public void edit(int index, Point point) {path.set(index, point);}
+
     public void remove(int index) {
         path.remove(index);
     }

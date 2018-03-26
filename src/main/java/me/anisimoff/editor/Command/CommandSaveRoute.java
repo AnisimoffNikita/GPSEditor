@@ -2,10 +2,9 @@ package me.anisimoff.editor.Command;
 
 import me.anisimoff.editor.Model.Model;
 import me.anisimoff.editor.Model.State;
-import me.anisimoff.editor.Route;
 
-public class CommandSave extends Command {
-    public CommandSave(Model model) {
+public class CommandSaveRoute extends Command {
+    public CommandSaveRoute(Model model) {
         super(model);
     }
 
@@ -22,7 +21,6 @@ public class CommandSave extends Command {
 
     @Override
     public void undo() {
-        model.removeSelectedRoute();
         model.setState(backup);
         model.saveRoute();
     }

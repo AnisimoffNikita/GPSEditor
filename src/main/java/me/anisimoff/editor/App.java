@@ -1,6 +1,6 @@
 package me.anisimoff.editor;
 
-import me.anisimoff.editor.Model.SimpleModel;
+import me.anisimoff.editor.Model.DatabaseModel;
 import me.anisimoff.editor.Presenter.SimplePresenter;
 import me.anisimoff.editor.Utils.Utils;
 import me.anisimoff.editor.View.Editor;
@@ -15,7 +15,7 @@ public class App {
         SwingUtilities.invokeLater(() -> {
             Utils.createConfigDir();
             View view = new Editor();
-            view.setPresenter(new SimplePresenter(view, new SimpleModel()));
+            view.setPresenter(new SimplePresenter(view, new DatabaseModel()));
         });
     }
 

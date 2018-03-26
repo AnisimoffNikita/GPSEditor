@@ -36,9 +36,6 @@ public class Editor implements View {
         frame.pack();
         frame.setVisible(true);
 
-        setButtons();
-        setRoutesTable();
-        setRouteDataTable();
     }
 
     private void setButtons() {
@@ -110,7 +107,7 @@ public class Editor implements View {
     }
 
     private void setRoutesTable(){
-        routesTable.addTableSelectionListener(presenter);
+        routesTable.addTableSelectionListener(this::saveIfNeeded);
         routesTable.addTableSelectedListener(presenter);
     }
 
@@ -152,20 +149,59 @@ public class Editor implements View {
     private int checkSaveDialog() {
         return JOptionPane.showConfirmDialog(null, "Save?", "Warning", JOptionPane.YES_NO_CANCEL_OPTION);
     }
+    @Override
+    public void setPresenter(Presenter presenter) {
+        this.presenter = presenter;
+
+        setButtons();
+        setRoutesTable();
+        setRouteDataTable();
+    }
 
     @Override
     public void setRouteList(List<Route> routes) {
         routesTable.addList(routes);
+        routesTable.cancelSelection();
     }
 
     @Override
-    public void setRouteData(Route route) {
+    public void updateRoute(Route route) {
+        if (!routesTable.isSelected()) {
+            return;
+        }
+
+        routesTable.updateSelectedRoute(route);
         routeDataTable.setRoute(route);
     }
 
     @Override
-    public void setPresenter(Presenter presenter) {
-        this.presenter = presenter;
+    public void addNewRoute(Route route) {
+        routesTable.addNewRoute(route);
+        routeDataTable.setRoute(route);
+    }
+
+    @Override
+    public void removeRoute() {
+        routesTable.removeSelected();
+        routeDataTable.clearData();
+    }
+
+    @Override
+    public void cancelSelection() {
+        routesTable.cancelSelection();
+        routeDataTable.clearData();
+    }
+
+    @Override
+    public void setSelectionByName(Route route) {
+        routesTable.setSelectionByName(route.getName());
+        routeDataTable.setRoute(route);
+    }
+
+    @Override
+    public void setRoute(Route route) {
+        routesTable.setSelectionByName(route.getName());
+        routeDataTable.setRoute(route);
     }
 
     @Override
@@ -177,21 +213,4 @@ public class Editor implements View {
     public void setRedoEnabled(boolean state) {
         redoButton.setEnabled(state);
     }
-
-    @Override
-    public void cancelSelection() {
-        routesTable.cancelSelection();
-        routeDataTable.clearData();
-    }
-
-    @Override
-    public void addNewRoute(Route route) {
-        routesTable.addRoute(route);
-    }
-
-    @Override
-    public void removeRoute() {
-        routesTable.removeSelected();
-    }
-
 }

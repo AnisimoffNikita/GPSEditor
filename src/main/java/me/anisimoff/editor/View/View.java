@@ -6,19 +6,23 @@ import me.anisimoff.editor.Route;
 import java.util.List;
 
 public interface View {
+    void setPresenter(Presenter presenter);
+
     void setRouteList(List<Route> routes);
 
-    void setRouteData(Route route);
+    void updateRoute(Route route);
 
     void addNewRoute(Route route);
 
-    void cancelSelection();
+    void setRoute(Route route);
 
-    void setPresenter(Presenter presenter);
+    void removeRoute();
+
+    void cancelSelection();
 
     void setUndoEnabled(boolean state);
 
     void setRedoEnabled(boolean state);
 
-    void removeRoute();
+    void setSelectionByName(Route route);
 }

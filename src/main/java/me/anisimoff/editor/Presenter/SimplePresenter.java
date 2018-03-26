@@ -18,6 +18,8 @@ public class SimplePresenter implements Presenter {
     public SimplePresenter(View view, Model model) {
         this.view = view;
         this.model = model;
+
+        view.setRouteList(model.loadAllRoutes());
     }
 
     @Override
@@ -29,7 +31,8 @@ public class SimplePresenter implements Presenter {
     public void newRoute() {
         if (model.executeCommand(new CommandNew(model))) {
             view.addNewRoute(model.getState().getRoute());
-            view.setRouteData(model.getState().getRoute());
+            view.setUndoEnabled(true);
+            view.setRedoEnabled(false);
         }
     }
 
@@ -37,7 +40,8 @@ public class SimplePresenter implements Presenter {
     public void openGPX(File opened) {
         if (model.executeCommand(new CommandOpenGPX(model, opened))) {
             view.addNewRoute(model.getState().getRoute());
-            view.setRouteData(model.getState().getRoute());
+            view.setUndoEnabled(true);
+            view.setRedoEnabled(false);
         }
     }
 
@@ -45,7 +49,8 @@ public class SimplePresenter implements Presenter {
     public void openPolyline(File opened) {
         if (model.executeCommand(new CommandOpenPolyline(model, opened))) {
             view.addNewRoute(model.getState().getRoute());
-            view.setRouteData(model.getState().getRoute());
+            view.setUndoEnabled(true);
+            view.setRedoEnabled(false);
         }
     }
 
@@ -54,16 +59,26 @@ public class SimplePresenter implements Presenter {
         if (model.executeCommand(new CommandRemoveRoute(model))) {
             view.removeRoute();
             view.cancelSelection();
+            view.setUndoEnabled(true);
+            view.setRedoEnabled(false);
         }
     }
 
     @Override
     public void undo() {
         if (model.undo()) {
+            view.setRouteList(model.loadAllRoutes());
+            if (model.getState() != null) {
+                view.setSelectionByName(model.getState().getRoute());
+            } else {
+                view.cancelSelection();
+            }
             view.setRedoEnabled(true);
+
             if (model.undoEmpty()) {
                 view.setUndoEnabled(false);
             }
+
         }else {
             view.setRedoEnabled(false);
             view.setUndoEnabled(false);
@@ -74,6 +89,12 @@ public class SimplePresenter implements Presenter {
     @Override
     public void redo() {
         if (model.redo()) {
+            view.setRouteList(model.loadAllRoutes());
+            if (model.getState() != null) {
+                view.setSelectionByName(model.getState().getRoute());
+            } else {
+                view.cancelSelection();
+            }
             view.setUndoEnabled(true);
             if (model.redoEmpty()) {
                 view.setRedoEnabled(false);
@@ -88,26 +109,29 @@ public class SimplePresenter implements Presenter {
     @Override
     public void addPointAfterSelected(int index) {
         model.executeCommand(new CommandAddPoint(model, index));
+        view.setUndoEnabled(true);
+        view.setRedoEnabled(false);
     }
 
     @Override
     public void removeSelectedPoint(int index) {
         model.executeCommand(new CommandRemovePoint(model, index));
+        view.setUndoEnabled(true);
+        view.setRedoEnabled(false);
     }
 
     @Override
     public void saveRoute() {
-        model.executeCommand(new CommandSave(model));
-        view.setRouteData(model.getState().getRoute());
+        model.executeCommand(new CommandSaveRoute(model));
+        view.updateRoute(model.getState().getRoute());
+        view.setUndoEnabled(true);
+        view.setRedoEnabled(false);
     }
 
     @Override
     public boolean needSave() {
         State route = model.getState();
-        if (route == null) {
-            return false;
-        }
-        return route.isNew() || route.isModified();
+        return route != null && (route.isNew() || route.isModified());
     }
 
     @Override
@@ -123,16 +147,21 @@ public class SimplePresenter implements Presenter {
 
     @Override
     public boolean select(String name) {
-        Route route = model.loadRouteByName(name);
-        if (route == null) {
-            return false;
+        if (model.executeCommand(new CommandLoadRoute(model, name))) {
+            view.setUndoEnabled(true);
+            Route route = model.getState().getRoute();
+            if (route == null) {
+                return false;
+            }
+            view.setRoute(route);
+            view.setRedoEnabled(false);
+            return true;
         }
-        view.setRouteData(route);
-        return true;
+        return false;
     }
 
     @Override
     public boolean canSelect() {
-        return needSave();
+        return !needSave();
     }
 }

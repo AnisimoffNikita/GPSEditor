@@ -1,14 +1,12 @@
 package me.anisimoff.editor.Command;
 
 import me.anisimoff.editor.Model.Model;
-import me.anisimoff.editor.View.Editor;
 
-public class CommandRemovePoint extends Command {
-    private int index;
-
-    public CommandRemovePoint(Model model, int index) {
+public class CommandRenameRoute extends Command {
+    private String name;
+    public CommandRenameRoute(Model model, String name) {
         super(model);
-        this.index = index;
+        this.name = name;
     }
 
     @Override
@@ -17,7 +15,7 @@ public class CommandRemovePoint extends Command {
             return false;
         }
         backup = model.getState();
-        model.getRoute().remove(index);
+        model.getRoute().setName(name);
         return true;
     }
 

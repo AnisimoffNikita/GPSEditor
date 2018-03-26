@@ -1,6 +1,7 @@
 package me.anisimoff.editor.Command;
 
 import me.anisimoff.editor.Model.Model;
+import me.anisimoff.editor.Point;
 
 public class CommandAddPoint extends Command {
     int index;
@@ -12,11 +13,16 @@ public class CommandAddPoint extends Command {
 
     @Override
     public boolean execute() {
-        return false;
+        if (model.nullState()) {
+            return false;
+        }
+        backup = model.getState();
+        model.getRoute().insertAfter(index, new Point(0.0,0.0));
+        return true;
     }
 
     @Override
     public void undo() {
-
+        model.setState(backup);
     }
 }
