@@ -3,7 +3,7 @@ package me.anisimoff.editor.Model;
 import me.anisimoff.editor.Route;
 
 public class State {
-    private enum RouteState {NEW, MODIFIED, NOT_MODIFIED};
+    private enum RouteState {NEW, MODIFIED, NOT_MODIFIED}
 
     private Route route;
     private RouteState state;

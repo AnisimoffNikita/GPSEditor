@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 public class CommandOpenPolyline extends Command {
-    File opened;
+    private final File opened;
     public CommandOpenPolyline(Model model, File opened) {
         super(model);
         this.opened = opened;

@@ -1,5 +1,6 @@
 package me.anisimoff.editor.View;
 
+import me.anisimoff.editor.Point;
 import me.anisimoff.editor.Presenter.Presenter;
 import me.anisimoff.editor.Route;
 

@@ -8,7 +8,7 @@ import me.anisimoff.editor.View.View;
 
 import javax.swing.*;
 
-public class App {
+class App {
 
     public static void main(String[] args) {
 

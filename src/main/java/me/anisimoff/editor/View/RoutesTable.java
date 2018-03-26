@@ -9,19 +9,27 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class RoutesTable extends JPanel {
     private JTable table;
     private JPanel panel;
 
     private int index;
-    private ArrayList<TableSelectionListener> tableSelectionListeners;
-    private ArrayList<TableSelectedListener> tableSelectedListeners;
+    private final ArrayList<TableSelectionListener> tableSelectionListeners;
+    private final ArrayList<TableSelectedListener> tableSelectedListeners;
+
+    public void clear() {
+        DataModel model = getModel();
+        model.setRowCount(0);
+    }
+
+    public boolean isSelected() {
+        return table.getSelectedRow() >= 0;
+    }
 
 
     private class DataModel extends DefaultTableModel {
-        String[] columns = {"Name", "Length", "Creation date"};
+        final String[] columns = {"Name", "Length", "Creation date"};
 
         public String getColumnName(int col) {
             return columns[col];
@@ -65,15 +73,15 @@ public class RoutesTable extends JPanel {
                 if (index < 0) {
                     index = row;
                     setSelection(index);
-                    return;
-                }
-
-                for (TableSelectionListener listener : tableSelectionListeners) {
-                    if (!listener.canSelect()) {
-                        setSelection(index);
-                        return;
+                } else {
+                    for (TableSelectionListener listener : tableSelectionListeners) {
+                        if (!listener.canSelect()) {
+                            setSelection(index);
+                            return;
+                        }
                     }
                 }
+
                 for (TableSelectedListener listener : tableSelectedListeners) {
                     if (!listener.select(getNameAt(row))) {
                         setSelection(index);
@@ -125,9 +133,6 @@ public class RoutesTable extends JPanel {
     }
 
     public void addList(java.util.List<Route> routes) {
-        DataModel model = getModel();
-        model.setRowCount(0);
-
         for (Route route : routes) {
             addNewRoute(route);
         }

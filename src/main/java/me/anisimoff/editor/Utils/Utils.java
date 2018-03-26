@@ -23,7 +23,7 @@ public class Utils {
         return openDialog.getSelectedFile();
     }
 
-    static int index = 0;
+    private static int index = 0;
     public static int untitledNumber() {
         return index++;
     }

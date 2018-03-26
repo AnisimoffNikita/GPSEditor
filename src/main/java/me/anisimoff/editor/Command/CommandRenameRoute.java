@@ -3,7 +3,7 @@ package me.anisimoff.editor.Command;
 import me.anisimoff.editor.Model.Model;
 
 public class CommandRenameRoute extends Command {
-    private String name;
+    private final String name;
     public CommandRenameRoute(Model model, String name) {
         super(model);
         this.name = name;

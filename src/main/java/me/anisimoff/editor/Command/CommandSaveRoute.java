@@ -14,9 +14,13 @@ public class CommandSaveRoute extends Command {
 
         backup = state;
 
-        state.setNotModified();
+        boolean result = model.saveRoute();
 
-        return model.saveRoute();
+        if (result) {
+            state.setNotModified();
+        }
+
+        return result;
     }
 
     @Override

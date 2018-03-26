@@ -8,6 +8,8 @@ import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -18,10 +20,11 @@ public class RouteDataTable extends JPanel {
     private JTextField polylineField;
     private Date creationDate;
 
-    private ArrayList<TableFinishEditingListener> tableFinishEditingListeners;
+    private final ArrayList<TableFinishEditingListener> tableFinishEditingListeners;
+    private final ArrayList<RenameListener> renameListeners;
 
     private class DataModel extends DefaultTableModel {
-        String[] columns = {"Latitude", "Longitude"};
+        final String[] columns = {"Latitude", "Longitude"};
         public String getColumnName(int col) {
             return columns[col];
         }
@@ -40,12 +43,13 @@ public class RouteDataTable extends JPanel {
         table.setModel(new DataModel());
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tableFinishEditingListeners = new ArrayList<>();
+        renameListeners = new ArrayList<>();
 
         table.getModel().addTableModelListener(e -> {
             if (e.getType() == TableModelEvent.UPDATE) {
                 int i = table.getSelectedRow();
                 DataModel model = getModel();
-                Point point = null;
+                Point point;
                 try {
                     double latitude = Double.parseDouble(model.getValueAt(i, 0).toString());
                     double longitude = Double.parseDouble(model.getValueAt(i, 1).toString());
@@ -55,6 +59,18 @@ public class RouteDataTable extends JPanel {
                 }
                 for (TableFinishEditingListener listener : tableFinishEditingListeners) {
                     listener.edited(i, point);
+                }
+            }
+        });
+
+        routeNameField.addFocusListener(new FocusListener() {
+            public void focusGained(FocusEvent e) {
+            };
+            public void focusLost(FocusEvent e) {
+                if (!e.isTemporary()) {
+                    for (RenameListener listener : renameListeners) {
+                        listener.rename(routeNameField.getText());
+                    }
                 }
             }
         });
@@ -128,9 +144,12 @@ public class RouteDataTable extends JPanel {
         }
     }
 
-
     public void addFinishEditingListener(TableFinishEditingListener listener) {
         tableFinishEditingListeners.add(listener);
+    }
+
+    public void addRenameListener(RenameListener listener) {
+        renameListeners.add(listener);
     }
 
 }

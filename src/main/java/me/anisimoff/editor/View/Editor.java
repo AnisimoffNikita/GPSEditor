@@ -1,5 +1,6 @@
 package me.anisimoff.editor.View;
 
+import me.anisimoff.editor.Point;
 import me.anisimoff.editor.Presenter.Presenter;
 import me.anisimoff.editor.Route;
 
@@ -22,14 +23,14 @@ public class Editor implements View {
     private RoutesTable routesTable;
     private RouteDataTable routeDataTable;
 
-    Presenter presenter;
+    private Presenter presenter;
 
 
     public Editor() {
         setupGUI();
     }
 
-    public void setupGUI() {
+    private void setupGUI() {
         JFrame frame = new JFrame("GPS Editor");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setContentPane(mainPanel);
@@ -113,6 +114,7 @@ public class Editor implements View {
 
     private void setRouteDataTable(){
         routeDataTable.addFinishEditingListener(presenter);
+        routeDataTable.addRenameListener(presenter);
     }
 
     private File openDialog(FileFilter filter, String header) {
@@ -160,6 +162,7 @@ public class Editor implements View {
 
     @Override
     public void setRouteList(List<Route> routes) {
+        routesTable.clear();
         routesTable.addList(routes);
         routesTable.cancelSelection();
     }
@@ -213,4 +216,5 @@ public class Editor implements View {
     public void setRedoEnabled(boolean state) {
         redoButton.setEnabled(state);
     }
+
 }

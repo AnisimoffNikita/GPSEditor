@@ -4,7 +4,7 @@ import me.anisimoff.editor.Model.Model;
 import me.anisimoff.editor.Point;
 
 public class CommandAddPoint extends Command {
-    int index;
+    private final int index;
 
     public CommandAddPoint(Model model, int index) {
         super(model);

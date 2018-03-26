@@ -4,8 +4,8 @@ import me.anisimoff.editor.Command.Command;
 
 import java.util.Stack;
 
-public class CommandHistory {
-    private Stack<Command> history = new Stack<Command>();
+class CommandHistory {
+    private final Stack<Command> history = new Stack<Command>();
 
     public void push(Command c) {
         history.push(c);

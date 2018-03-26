@@ -5,25 +5,35 @@ import java.util.Date;
 import java.util.List;
 
 public class Route {
+    private int id;
     private String name;
     private ArrayList<Point> path;
-    private Date date;
+    private final Date date;
 
-    final static public String UNTITLED = "untitled";
+    private final static String UNTITLED = "untitled";
 
     public Route() {
+        this.id = -1;
         this.name = UNTITLED;
         this.path = new ArrayList<>();
         this.date = new Date();
     }
 
-    public Route(String name, List<Point> path) {
+    public Route(String name, ArrayList<Point> path, Date date) {
+        this.name = name;
+        this.path = path;
+        this.date = date;
+    }
+
+    public Route(int id, String name, List<Point> path) {
+        this.id = id;
         this.name = name;
         this.path = new ArrayList<>(path);
         this.date = new Date();
     }
 
-    public Route(String name, List<Point> path, Date date) {
+    public Route(int id, String name, List<Point> path, Date date) {
+        this.id = id;
         this.name = name;
         this.path = new ArrayList<>(path);
         this.date = date;
@@ -56,6 +66,10 @@ public class Route {
 
     public void setPath(ArrayList<Point> path) {
         this.path = path;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public void insertAfter(int index, Point point) {

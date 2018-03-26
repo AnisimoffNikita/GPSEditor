@@ -1,21 +1,16 @@
 package me.anisimoff.editor.Model;
 
 import me.anisimoff.editor.Command.Command;
-import me.anisimoff.editor.Constants;
-import me.anisimoff.editor.Utils.PolylineEncoder;
 import me.anisimoff.editor.Route;
 
-import javax.xml.crypto.Data;
-import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class DatabaseModel implements Model {
 
-    private Database database;
+    private final Database database;
     private State state;
-    private CommandHistory undoHistory;
-    private CommandHistory redoHistory;
+    private final CommandHistory undoHistory;
+    private final CommandHistory redoHistory;
 
 
     public DatabaseModel() {
@@ -32,8 +27,15 @@ public class DatabaseModel implements Model {
 
     @Override
     public boolean saveRoute() {
-        return !nullState() && database.saveRoute(getRoute());
+        if (nullState()) {
+            return false;
+        }
 
+        if (state.isNew()) {
+            return database.insertRoute(getRoute());
+        } else {
+            return database.updateRoute(getRoute());
+        }
     }
 
     @Override
@@ -46,9 +48,7 @@ public class DatabaseModel implements Model {
         if (nullState()) {
             return false;
         }
-        String name = getRoute().getName();
-
-        boolean result = database.removeRoute(name);
+        boolean result = database.removeRoute(getRoute().getId());
         if (result) {
             state = null;
         }

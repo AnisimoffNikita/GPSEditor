@@ -8,23 +8,17 @@ import me.anisimoff.editor.Model.State;
 import me.anisimoff.editor.View.View;
 
 import java.io.File;
-import java.util.List;
 
 public class SimplePresenter implements Presenter {
 
-    private View view;
-    private Model model;
+    private final View view;
+    private final Model model;
 
     public SimplePresenter(View view, Model model) {
         this.view = view;
         this.model = model;
 
         view.setRouteList(model.loadAllRoutes());
-    }
-
-    @Override
-    public List<Route> getRoutes() {
-        return model.loadAllRoutes();
     }
 
     @Override
@@ -58,11 +52,43 @@ public class SimplePresenter implements Presenter {
     public void removeSelectedRoute() {
         if (model.executeCommand(new CommandRemoveRoute(model))) {
             view.removeRoute();
-            view.cancelSelection();
             view.setUndoEnabled(true);
             view.setRedoEnabled(false);
         }
     }
+
+    @Override
+    public void addPointAfterSelected(int index) {
+        model.executeCommand(new CommandAddPoint(model, index));
+        view.updateRoute(model.getRoute());
+        view.setUndoEnabled(true);
+        view.setRedoEnabled(false);
+    }
+
+    @Override
+    public void removeSelectedPoint(int index) {
+        model.executeCommand(new CommandRemovePoint(model, index));
+        view.updateRoute(model.getRoute());
+        view.setUndoEnabled(true);
+        view.setRedoEnabled(false);
+    }
+
+    @Override
+    public void rename(String name) {
+        model.executeCommand(new CommandRenameRoute(model, name));
+        view.updateRoute(model.getRoute());
+        view.setUndoEnabled(true);
+        view.setRedoEnabled(false);
+    }
+
+    @Override
+    public void saveRoute() {
+        model.executeCommand(new CommandSaveRoute(model));
+        view.updateRoute(model.getState().getRoute());
+        view.setUndoEnabled(true);
+        view.setRedoEnabled(false);
+    }
+
 
     @Override
     public void undo() {
@@ -107,28 +133,6 @@ public class SimplePresenter implements Presenter {
     }
 
     @Override
-    public void addPointAfterSelected(int index) {
-        model.executeCommand(new CommandAddPoint(model, index));
-        view.setUndoEnabled(true);
-        view.setRedoEnabled(false);
-    }
-
-    @Override
-    public void removeSelectedPoint(int index) {
-        model.executeCommand(new CommandRemovePoint(model, index));
-        view.setUndoEnabled(true);
-        view.setRedoEnabled(false);
-    }
-
-    @Override
-    public void saveRoute() {
-        model.executeCommand(new CommandSaveRoute(model));
-        view.updateRoute(model.getState().getRoute());
-        view.setUndoEnabled(true);
-        view.setRedoEnabled(false);
-    }
-
-    @Override
     public boolean needSave() {
         State route = model.getState();
         return route != null && (route.isNew() || route.isModified());
@@ -143,6 +147,7 @@ public class SimplePresenter implements Presenter {
     @Override
     public void edited(int index, Point point) {
         model.executeCommand(new CommandEditPoint(model, index, point));
+        view.updateRoute(model.getRoute());
     }
 
     @Override
@@ -164,4 +169,6 @@ public class SimplePresenter implements Presenter {
     public boolean canSelect() {
         return !needSave();
     }
+
+
 }

@@ -4,10 +4,10 @@ import me.anisimoff.editor.Model.Model;
 import me.anisimoff.editor.Model.State;
 
 public abstract class Command {
-    protected Model model;
-    protected State backup;
+    final Model model;
+    State backup;
 
-    public Command(Model model) {
+    Command(Model model) {
         this.model = model;
     }
 

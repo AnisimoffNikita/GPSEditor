@@ -8,10 +8,11 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Database {
+class Database {
 
     private Connection conn;
 
+    private final static String ID_COLUMN = "id";
     private final static String NAME_COLUMN = "name";
     private final static String POLYLINE_COLUMN = "polyline";
     private final static String DATE_COLUMN = "creationDate";
@@ -53,9 +54,9 @@ public class Database {
         return index + 1;
     }
 
-    public boolean saveRoute(Route route) {
+    public boolean insertRoute(Route route) {
 
-        String sql = "insert or replace into routes(name,polyline,creationDate) values(?,?,?)";
+        String sql = "insert into routes(name,polyline,creationDate) values(?,?,?)";
         boolean result = true;
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -69,9 +70,26 @@ public class Database {
         return result;
     }
 
+    public boolean updateRoute(Route route) {
+
+        String sql = "replace into routes(id,name,polyline,creationDate) values(?,?,?,?)";
+        boolean result = true;
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, route.getId());
+            pstmt.setString(2, route.getName());
+            pstmt.setString(3, PolylineEncoder.encode(route.getPath()));
+            pstmt.setLong(4, route.getDate().getTime());
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            result = false;
+        }
+        return result;
+    }
+
     public Route loadRouteByName(String name) {
         Route route = null;
-        String sql = "SELECT name, polyline, creationDate "
+        String sql = "SELECT id, name, polyline, creationDate "
                 + "FROM routes WHERE name = ?";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -81,7 +99,9 @@ public class Database {
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
-                route = new Route(rs.getString(NAME_COLUMN),
+                route = new Route(
+                        rs.getInt(ID_COLUMN),
+                        rs.getString(NAME_COLUMN),
                         PolylineEncoder.decode(rs.getString(POLYLINE_COLUMN)),
                         new Date(rs.getLong(DATE_COLUMN)));
             }
@@ -93,13 +113,13 @@ public class Database {
         return route;
     }
 
-    public boolean removeRoute(String name) {
-        String sql = "DELETE FROM routes WHERE name = ?";
+    public boolean removeRoute(int id) {
+        String sql = "DELETE FROM routes WHERE id = ?";
 
         boolean result = true;
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, name);
+            pstmt.setInt(1, id);
             pstmt.executeUpdate();
         } catch (SQLException e) {
             result = false;
@@ -110,13 +130,15 @@ public class Database {
 
     public List<Route> loadAllRoutes() {
         ArrayList<Route> routes = new ArrayList<>();
-        String sql = "SELECT name, polyline, creationDate FROM routes;";
+        String sql = "SELECT id, name, polyline, creationDate FROM routes;";
 
         try (Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                routes.add(new Route(rs.getString(NAME_COLUMN),
+                routes.add(new Route(
+                        rs.getInt(ID_COLUMN),
+                        rs.getString(NAME_COLUMN),
                         PolylineEncoder.decode(rs.getString(POLYLINE_COLUMN)),
                         new Date(rs.getLong(DATE_COLUMN))));
             }
@@ -140,7 +162,8 @@ public class Database {
 
     private void createTableIfNotExist() {
         String sql = "create table if not exists routes (\n"
-                + "	name text primary key not null,\n"
+                + "	id integer primary key autoincrement not null,\n"
+                + "	name text not null,\n"
                 + "	polyline text not null,\n"
                 + "	creationDate integer not null\n"
                 + ");";

@@ -9,7 +9,7 @@ import me.anisimoff.editor.Utils.GPXReader;
 import java.io.File;
 
 public class CommandOpenGPX extends Command {
-    File opened;
+    private final File opened;
     public CommandOpenGPX(Model model, File opened) {
         super(model);
         this.opened = opened;

@@ -5,7 +5,7 @@ import me.anisimoff.editor.Route;
 import me.anisimoff.editor.Model.State;
 
 public class CommandLoadRoute extends Command {
-    String name;
+    private final String name;
     public CommandLoadRoute(Model model, String name) {
         super(model);
         this.name = name;
