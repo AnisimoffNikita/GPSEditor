@@ -11,9 +11,7 @@ import javax.swing.*;
 class App {
 
     public static void main(String[] args) {
-
         SwingUtilities.invokeLater(() -> {
-
             try {
                 Class.forName("org.sqlite.JDBC");
             } catch (ClassNotFoundException e) {

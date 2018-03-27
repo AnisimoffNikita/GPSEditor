@@ -1,7 +1,7 @@
 package me.anisimoff.editor;
 
 public class Constants {
-    private static final boolean DEV_MODE = true;
+    private static final boolean DEV_MODE = false;
     public static String configPath;
     public static final int CANNOT_CREATE_CONFIG_FOLDER = 1;
     public static final int CANNOT_CREATE_DATABASE = 2;
