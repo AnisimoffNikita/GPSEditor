@@ -19,6 +19,6 @@ public class CommandRemoveRoute extends Command {
     @Override
     public void undo() {
         model.setState(backup);
-        model.updateRoute();
+        model.saveRoute();
     }
 }

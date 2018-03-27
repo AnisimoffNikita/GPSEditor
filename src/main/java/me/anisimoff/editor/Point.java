@@ -1,6 +1,8 @@
 package me.anisimoff.editor;
 
-public class Point {
+import java.io.Serializable;
+
+public class Point implements Serializable {
     private Double latitude;
     private Double longitude;
 
@@ -18,20 +20,24 @@ public class Point {
         return latitude;
     }
 
-    public void setLatitude(Double latitude) {
-        this.latitude = latitude;
-    }
-
     public Double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(Double longitude) {
-        this.longitude = longitude;
-    }
-
     public Double distance(Point point) {
-        return Math.sqrt(Math.pow(this.latitude - point.latitude, 2) +
-                         Math.pow(this.longitude - point.longitude, 2));
+
+        final int R = 6371;
+
+        double latDistance = Math.toRadians(point.latitude - latitude);
+        double lonDistance = Math.toRadians(point.longitude - point.longitude);
+        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                + Math.cos(Math.toRadians(latitude)) * Math.cos(Math.toRadians(latitude))
+                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        double distance = R * c * 1000;
+
+        distance = Math.pow(distance, 2);
+
+        return Math.sqrt(distance);
     }
 }

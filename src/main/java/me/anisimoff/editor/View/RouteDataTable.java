@@ -8,6 +8,8 @@ import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.ArrayList;
@@ -18,6 +20,7 @@ public class RouteDataTable extends JPanel {
     private JPanel panel;
     private JTextField routeNameField;
     private JTextField polylineField;
+    private JButton copyToClipboardButton;
     private Date creationDate;
 
     private TableFinishEditingListener tableFinishEditingListener;
@@ -73,6 +76,13 @@ public class RouteDataTable extends JPanel {
                     }
                 }
             }
+        });
+
+        copyToClipboardButton.addActionListener(e -> {
+            Toolkit toolkit = Toolkit.getDefaultToolkit();
+            Clipboard clipboard = toolkit.getSystemClipboard();
+            StringSelection strSel = new StringSelection(polylineField.getText());
+            clipboard.setContents(strSel, null);
         });
     }
 

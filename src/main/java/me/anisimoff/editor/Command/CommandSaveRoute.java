@@ -19,6 +19,9 @@ public class CommandSaveRoute extends Command {
             return false;
         }
 
+        backup = model.getState();
+        dbBackup = model.loadRouteByID(model.getRoute().getId());
+
         boolean result = model.updateRoute();
 
         if (result) {
@@ -30,7 +33,8 @@ public class CommandSaveRoute extends Command {
 
     @Override
     public void undo() {
-
+        model.setState(State.ModifiedRoute(dbBackup));
         model.updateRoute();
+        model.setState(backup);
     }
 }

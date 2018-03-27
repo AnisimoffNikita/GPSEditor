@@ -55,7 +55,7 @@ public class SimplePresenter implements Presenter {
         if (!invoker.executeCommand(new CommandRemoveRoute(model))) {
             view.warningMessage("Cannot remove route");
         }
-        view.setState(model.loadAllRoutes(), model.getRoute());
+        view.setState(model.loadAllRoutes());
     }
 
     @Override

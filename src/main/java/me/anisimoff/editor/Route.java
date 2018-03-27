@@ -1,10 +1,11 @@
 package me.anisimoff.editor;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Route {
+public class Route  implements Serializable {
     private int id;
     private String name;
     private ArrayList<Point> path;
@@ -64,10 +65,6 @@ public class Route {
         return path;
     }
 
-    public void setPath(ArrayList<Point> path) {
-        this.path = path;
-    }
-
     public int getId() {
         return id;
     }
@@ -85,4 +82,6 @@ public class Route {
     public void remove(int index) {
         path.remove(index);
     }
+
+
 }

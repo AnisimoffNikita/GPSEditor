@@ -3,8 +3,8 @@ package me.anisimoff.editor.Command;
 import java.util.Stack;
 
 public class CommandInvoker {
-    Stack<Command> undoHistory;
-    Stack<Command> redoHistory;
+    private Stack<Command> undoHistory;
+    private Stack<Command> redoHistory;
 
     public CommandInvoker() {
         undoHistory = new Stack<>();
@@ -22,7 +22,6 @@ public class CommandInvoker {
 
     public boolean undo() throws CannotUndoException {
         if (!canUndo()) {
-            clear();
             throw new CannotUndoException();
         }
         Command command = undoHistory.pop();
@@ -33,7 +32,6 @@ public class CommandInvoker {
 
     public boolean redo() throws CannotRedoException {
         if (!canRedo()) {
-            clear();
             throw new CannotRedoException();
         }
         Command command = redoHistory.pop();
@@ -44,11 +42,11 @@ public class CommandInvoker {
         return executed;
     }
 
-    public boolean canUndo() {
+    private boolean canUndo() {
         return !undoHistory.empty();
     }
 
-    public boolean canRedo() {
+    private boolean canRedo() {
         return !redoHistory.empty();
     }
 

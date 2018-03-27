@@ -1,7 +1,9 @@
 package me.anisimoff.editor.Command;
 
 import me.anisimoff.editor.Model.Model;
+import me.anisimoff.editor.Model.State;
 import me.anisimoff.editor.Point;
+import me.anisimoff.editor.Utils.Utils;
 
 public class CommandAddPoint extends Command {
     private final int index;
@@ -16,7 +18,7 @@ public class CommandAddPoint extends Command {
         if (model.isNone()) {
             return false;
         }
-        backup = model.getState();
+        backup = (State)Utils.deepClone(model.getState());
         model.getRoute().insertAfter(index, new Point(0.0,0.0));
         return true;
     }
