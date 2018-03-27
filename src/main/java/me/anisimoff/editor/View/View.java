@@ -7,28 +7,16 @@ import me.anisimoff.editor.Route;
 import java.util.List;
 import java.util.Vector;
 
-public interface View {
-    void setPresenter(Presenter presenter);
+public abstract class View {
+    protected Presenter presenter;
 
-    void setRouteList(List<Route> routes);
+    public void setPresenter(Presenter presenter) {
+        this.presenter = presenter;
+    }
 
-    void updateRoute(Route route);
+    public abstract void setState(List<Route> routes);
 
-    void addNewRoute(Route route);
+    public abstract void setState(List<Route> routes, Route route);
 
-    void setRoute(Route route);
-
-    void removeRoute();
-
-    void cancelSelection();
-
-    void setUndoEnabled(boolean state);
-
-    void setRedoEnabled(boolean state);
-
-    void setSaveButtonEnabled(boolean state);
-
-    void setRemoveButtonEnabled(boolean state);
-
-    void setSelectionByName(Route route);
+    public abstract void warningMessage(String text);
 }

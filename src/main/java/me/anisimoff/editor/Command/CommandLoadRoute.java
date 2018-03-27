@@ -7,15 +7,15 @@ import me.anisimoff.editor.Model.State;
 import java.util.Vector;
 
 public class CommandLoadRoute extends Command {
-    private final String name;
-    public CommandLoadRoute(Model model, String name) {
+    private final int id;
+    public CommandLoadRoute(Model model, int id) {
         super(model);
-        this.name = name;
+        this.id = id;
     }
 
     @Override
     public boolean execute() {
-        Route route = model.loadRouteByName(name);
+        Route route = model.loadRouteByID(id);
 
         backup = model.getState();
 

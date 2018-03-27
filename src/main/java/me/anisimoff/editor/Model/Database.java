@@ -89,14 +89,14 @@ class Database {
         return result;
     }
 
-    public Route loadRouteByName(String name) {
+    public Route loadRouteByID(int id) {
         Route route = null;
         String sql = "SELECT id, name, polyline, creationDate "
-                + "FROM routes WHERE name = ?";
+                + "FROM routes WHERE id = ?";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setString(1, name);
+            pstmt.setInt(1, id);
 
             ResultSet rs = pstmt.executeQuery();
 

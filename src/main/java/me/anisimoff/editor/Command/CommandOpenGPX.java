@@ -10,6 +10,7 @@ import java.io.File;
 
 public class CommandOpenGPX extends Command {
     private final File opened;
+
     public CommandOpenGPX(Model model, File opened) {
         super(model);
         this.opened = opened;

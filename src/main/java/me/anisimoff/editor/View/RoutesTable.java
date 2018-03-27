@@ -1,5 +1,6 @@
 package me.anisimoff.editor.View;
 
+import com.sun.istack.internal.NotNull;
 import me.anisimoff.editor.Route;
 
 import javax.swing.*;
@@ -20,14 +21,7 @@ public class RoutesTable extends JPanel {
     private final ArrayList<TableSelectionListener> tableSelectionListeners;
     private final ArrayList<TableSelectedListener> tableSelectedListeners;
 
-    public void clear() {
-        DataModel model = getModel();
-        model.setRowCount(0);
-    }
-
-    public boolean isSelected() {
-        return table.getSelectedRow() >= 0;
-    }
+    private ArrayList<Route> routes;
 
 
     private class DataModel extends DefaultTableModel {
@@ -46,6 +40,7 @@ public class RoutesTable extends JPanel {
         super();
         setLayout(new BorderLayout());
         index = -1;
+        routes = new ArrayList<>();
 
         tableSelectionListeners = new ArrayList<>();
         tableSelectedListeners = new ArrayList<>();
@@ -72,20 +67,16 @@ public class RoutesTable extends JPanel {
                 if (row < 0 || row >= table.getRowCount() || row == index) {
                     return;
                 }
-                if (index < 0) {
-                    index = row;
-                    setSelection(index);
-                } else {
-                    for (TableSelectionListener listener : tableSelectionListeners) {
-                        if (!listener.canSelect()) {
-                            setSelection(index);
-                            return;
-                        }
+
+                for (TableSelectionListener listener : tableSelectionListeners) {
+                    if (!listener.canSelect()) {
+                        setSelection(index);
+                        return;
                     }
                 }
 
                 for (TableSelectedListener listener : tableSelectedListeners) {
-                    if (!listener.select(getNameAt(row))) {
+                    if (!listener.select(getIDAt(row))) {
                         setSelection(index);
                         return;
                     }
@@ -107,94 +98,36 @@ public class RoutesTable extends JPanel {
         tableSelectedListeners.add(listener);
     }
 
-    public void updateSelectedRoute(Route route) {
-        int i = table.getSelectedRow();
-        updateRoute(i, route);
-    }
+    public void setRoutes(List<Route> routes) {
+        this.routes = new ArrayList<>(routes);
 
-    public void addNewRoute(Route route) {
-        DataModel model = (DataModel)table.getModel();
-        int i = model.getRowCount();
-        model.addRow(new Object[] {route.getName(), route.getLength(), route.getDate()});
-        setSelection(i);
-    }
+        clear();
 
-    public void removeSelected() {
-        int index = table.getSelectedRow();
-        if (index < 0) {
-            return;
-        }
-        DataModel model = (DataModel)table.getModel();
-        model.removeRow(index);
-        cancelSelection();
-    }
-
-    public void cancelSelection() {
-        index = -1;
-        table.clearSelection();
-    }
-
-    public void addList(java.util.List<Route> routes) {
         for (Route route : routes) {
-            addNewRoute(route);
+            addRoute(route);
         }
 
         cancelSelection();
     }
 
+    public void setRoutes(List<Route> routes, Route selected) {
+        this.routes = new ArrayList<>(routes);
 
-    public void setSelectionByName(String name) {
-        DataModel model = getModel();
+        clear();
 
-        for (int i = 0; i < model.getRowCount(); i++) {
-            if (model.getValueAt(i, 0).equals(name)) {
-
-                setSelection(i);
-                return;
+        int index = 0;
+        for (Route route : routes) {
+            addRoute(route);
+            if (route.getId() == selected.getId()) {
+                setSelection(index);
             }
-        }
-
-        cancelSelection();
-    }
-
-    public Vector<Vector<String>> getRawRoutes() {
-        Vector<Vector<String>> routes = new Vector<>();
-        DataModel model = getModel();
-        for (int i = 0; i < table.getRowCount(); i++) {
-            Vector<String> row = new Vector<>();
-            for (int j = 0; j < table.getColumnCount(); j++) {
-                row.add(model.getValueAt(i, j).toString());
-            }
-            routes.add(row);
-        }
-        return routes;
-    }
-
-
-    public void setRawRoutes(Vector<Vector<String>> raw) {
-        DataModel model = getModel();
-        model.setRowCount(0);
-        for (int i = 0; i < raw.size(); i++) {
-            model.addRow(raw.get(i));
+            index++;
         }
     }
 
 
-
-    private void updateRoute(int i, Route route) {
-        DataModel model = getModel();
-        model.setValueAt(route.getName(), i, 0);
-        model.setValueAt(route.getLength(), i, 1);
-        model.setValueAt(route.getDate(), i, 2);
-    }
-
-    private String getSelectedName(){
-        int row = table.getSelectedRow();
-        return table.getValueAt(row,0).toString();
-    }
-
-    private String getNameAt(int i) {
-        return  table.getValueAt(i,0).toString();
+    private int getIDAt(int i) {
+        return  routes.get(i).getId();
     }
 
     private void setSelection(int i) {
@@ -202,9 +135,22 @@ public class RoutesTable extends JPanel {
         table.setRowSelectionInterval(i, i);
     }
 
+    private void addRoute(Route route) {
+        DataModel model = (DataModel)table.getModel();
+        model.addRow(new Object[] {route.getName(), route.getLength(), route.getDate()});
+    }
+
+    private void cancelSelection() {
+        index = -1;
+        table.clearSelection();
+    }
 
     private DataModel getModel() {
         return (DataModel) table.getModel();
     }
 
+    private void clear() {
+        DataModel model = getModel();
+        model.setRowCount(0);
+    }
 }

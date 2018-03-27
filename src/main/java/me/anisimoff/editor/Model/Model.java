@@ -1,6 +1,6 @@
 package me.anisimoff.editor.Model;
 
-import me.anisimoff.editor.Command.Command;
+import me.anisimoff.editor.Command.CommandInvoker;
 import me.anisimoff.editor.Route;
 
 import java.util.List;
@@ -14,7 +14,7 @@ public interface Model {
 
     boolean removeRoute();
 
-    Route loadRouteByName(String name);
+    Route loadRouteByID(int id);
 
     List<Route> loadAllRoutes();
 
@@ -26,15 +26,5 @@ public interface Model {
 
     Route getRoute();
 
-    boolean executeCommand(Command command);
-
-    boolean undo();
-
-    boolean redo();
-
-    boolean undoEmpty();
-
-    boolean redoEmpty();
-
-    void clearHistory();
+    CommandInvoker getCommandInvoker();
 }

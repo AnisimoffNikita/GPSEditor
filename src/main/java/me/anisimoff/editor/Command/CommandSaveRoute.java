@@ -2,8 +2,11 @@ package me.anisimoff.editor.Command;
 
 import me.anisimoff.editor.Model.Model;
 import me.anisimoff.editor.Model.State;
+import me.anisimoff.editor.Route;
 
 public class CommandSaveRoute extends Command {
+    private Route dbBackup;
+
     public CommandSaveRoute(Model model) {
         super(model);
     }
@@ -16,8 +19,6 @@ public class CommandSaveRoute extends Command {
             return false;
         }
 
-        backup = state;
-
         boolean result = model.updateRoute();
 
         if (result) {
@@ -29,7 +30,7 @@ public class CommandSaveRoute extends Command {
 
     @Override
     public void undo() {
-        model.setState(backup);
+
         model.updateRoute();
     }
 }

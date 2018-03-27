@@ -52,14 +52,14 @@
           <component id="6e6e3" class="javax.swing.JButton" binding="undoButton" default-binding="true">
             <constraints/>
             <properties>
-              <enabled value="false"/>
+              <enabled value="true"/>
               <text value="Undo"/>
             </properties>
           </component>
           <component id="2825d" class="javax.swing.JButton" binding="redoButton" default-binding="true">
             <constraints/>
             <properties>
-              <enabled value="false"/>
+              <enabled value="true"/>
               <text value="Redo"/>
             </properties>
           </component>

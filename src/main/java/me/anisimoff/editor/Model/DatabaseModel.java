@@ -1,6 +1,7 @@
 package me.anisimoff.editor.Model;
 
 import me.anisimoff.editor.Command.Command;
+import me.anisimoff.editor.Command.CommandInvoker;
 import me.anisimoff.editor.Route;
 
 import java.util.List;
@@ -9,14 +10,12 @@ public class DatabaseModel implements Model {
 
     private final Database database;
     private State state;
-    private final CommandHistory undoHistory;
-    private final CommandHistory redoHistory;
+    private final CommandInvoker commandInvoker;
 
 
     public DatabaseModel() {
         database = new Database();
-        undoHistory = new CommandHistory();
-        redoHistory = new CommandHistory();
+        commandInvoker = new CommandInvoker();
         state = new State();
     }
 
@@ -50,8 +49,8 @@ public class DatabaseModel implements Model {
     }
 
     @Override
-    public Route loadRouteByName(String name) {
-        return database.loadRouteByName(name);
+    public Route loadRouteByID(int id) {
+        return database.loadRouteByID(id);
     }
 
     @Override
@@ -91,51 +90,14 @@ public class DatabaseModel implements Model {
     }
 
     @Override
-    public boolean undo() {
-        Command command = undoHistory.pop();
-        command.undo();
-        redoHistory.push(command);
-        return true;
-    }
-
-    @Override
-    public boolean redo() {
-        Command command = redoHistory.pop();
-        boolean executed = command.execute();
-        if (executed) {
-            undoHistory.push(command);
-        }
-        return executed;
-    }
-
-    @Override
-    public boolean executeCommand(Command command) {
-        boolean executed = command.execute();
-        if (executed) {
-            undoHistory.push(command);
-            redoHistory.clear();
-        }
-        return executed;
-    }
-
-    @Override
-    public boolean undoEmpty() {
-        return undoHistory.isEmpty();
-    }
-
-    @Override
-    public void clearHistory() {
-        undoHistory.clear();
-        redoHistory.clear();
-    }
-
-    @Override
-    public boolean redoEmpty() {
-        return redoHistory.isEmpty();
-    }
-
-    @Override
     public boolean isNone() {
         return state.isNone();
     }
+
+    @Override
+    public CommandInvoker getCommandInvoker() {
+        return commandInvoker;
+    }
+
+
 }

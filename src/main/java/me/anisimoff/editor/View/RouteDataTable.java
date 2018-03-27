@@ -20,8 +20,8 @@ public class RouteDataTable extends JPanel {
     private JTextField polylineField;
     private Date creationDate;
 
-    private final ArrayList<TableFinishEditingListener> tableFinishEditingListeners;
-    private final ArrayList<RenameListener> renameListeners;
+    private TableFinishEditingListener tableFinishEditingListener;
+    private RenameListener renameListener;
 
     private class DataModel extends DefaultTableModel {
         final String[] columns = {"Latitude", "Longitude"};
@@ -42,8 +42,8 @@ public class RouteDataTable extends JPanel {
         setLayout(new BorderLayout());
         table.setModel(new DataModel());
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        tableFinishEditingListeners = new ArrayList<>();
-        renameListeners = new ArrayList<>();
+        tableFinishEditingListener = null;
+        renameListener = null;
 
         table.getModel().addTableModelListener(e -> {
             if (e.getType() == TableModelEvent.UPDATE) {
@@ -57,8 +57,8 @@ public class RouteDataTable extends JPanel {
                 } catch (NumberFormatException | NullPointerException ignored) {
                     point = null;
                 }
-                for (TableFinishEditingListener listener : tableFinishEditingListeners) {
-                    listener.edited(i, point);
+                if (tableFinishEditingListener != null) {
+                    tableFinishEditingListener.edited(i, point);
                 }
             }
         });
@@ -68,8 +68,8 @@ public class RouteDataTable extends JPanel {
             };
             public void focusLost(FocusEvent e) {
                 if (!e.isTemporary()) {
-                    for (RenameListener listener : renameListeners) {
-                        listener.rename(routeNameField.getText());
+                    if (renameListener != null) {
+                        renameListener.rename(routeNameField.getText());
                     }
                 }
             }
@@ -93,11 +93,11 @@ public class RouteDataTable extends JPanel {
         }
     }
 
-    public Route getRoute() {
+    public Route getRoute() throws RouteParseException {
         String name = routeNameField.getText();
         ArrayList<Point> path = new ArrayList<>();
         DataModel model = getModel();
-        int nRow = model.getRowCount(), nCol = model.getColumnCount();
+        int nRow = model.getRowCount();
 
         try {
             for (int i = 0; i < nRow; i++) {
@@ -106,7 +106,7 @@ public class RouteDataTable extends JPanel {
                 path.add(new Point(latitude, longitude));
             }
         } catch (NumberFormatException | NullPointerException ignored) {
-            return null;
+            throw new RouteParseException();
         }
 
         return new Route(name, path, creationDate);
@@ -126,30 +126,18 @@ public class RouteDataTable extends JPanel {
         return (DataModel)table.getModel();
     }
 
-    private void addRow(int index, double lat, double lng) {
-        DataModel model = getModel();
-        model.insertRow(index, new Object[] {lat, lng});
-    }
-
     private void addRow(double lat, double lng) {
         DataModel model = getModel();
         int index = model.getRowCount();
         model.insertRow(index, new Object[] {lat, lng});
     }
 
-    private void removeRow(int index) {
-        DataModel model = getModel();
-        if (index > 0) {
-            model.removeRow(index);
-        }
+    public void setFinishEditingListener(TableFinishEditingListener listener) {
+        tableFinishEditingListener = listener;
     }
 
-    public void addFinishEditingListener(TableFinishEditingListener listener) {
-        tableFinishEditingListeners.add(listener);
-    }
-
-    public void addRenameListener(RenameListener listener) {
-        renameListeners.add(listener);
+    public void setRenameListener(RenameListener listener) {
+        renameListener = listener;
     }
 
 }

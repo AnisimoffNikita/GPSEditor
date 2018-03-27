@@ -13,12 +13,13 @@ public class State {
     private Route route;
     private RouteState state;
 
+
     public State() {
         this.route = null;
         this.state = RouteState.NONE;
     }
 
-    private State(Route route, RouteState state) {
+    public State(Route route, RouteState state) {
         this.state = state;
         this.route = route;
     }
@@ -36,7 +37,7 @@ public class State {
         return new State(route, RouteState.NOT_MODIFIED);
     }
 
-    public RouteState getState() {
+    public RouteState getRouteState() {
         return state;
     }
 

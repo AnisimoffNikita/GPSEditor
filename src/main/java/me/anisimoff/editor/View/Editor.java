@@ -7,9 +7,8 @@ import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import java.io.File;
 import java.util.List;
-import java.util.Vector;
 
-public class Editor implements View {
+public class Editor extends View {
     private JPanel mainPanel;
     private JButton openGPXButton;
     private JButton openPolylineButton;
@@ -23,9 +22,6 @@ public class Editor implements View {
     private RoutesTable routesTable;
     private RouteDataTable routeDataTable;
 
-    private Presenter presenter;
-
-
     public Editor() {
         setupGUI();
     }
@@ -36,7 +32,6 @@ public class Editor implements View {
         frame.setContentPane(mainPanel);
         frame.pack();
         frame.setVisible(true);
-
     }
 
     private void setButtons() {
@@ -113,8 +108,8 @@ public class Editor implements View {
     }
 
     private void setRouteDataTable(){
-        routeDataTable.addFinishEditingListener(presenter);
-        routeDataTable.addRenameListener(presenter);
+        routeDataTable.setFinishEditingListener(presenter);
+        routeDataTable.setRenameListener(presenter);
     }
 
     private File openDialog(FileFilter filter, String header) {
@@ -148,9 +143,10 @@ public class Editor implements View {
     private int checkSaveDialog() {
         return JOptionPane.showConfirmDialog(null, "Save?", "Warning", JOptionPane.YES_NO_CANCEL_OPTION);
     }
+
     @Override
     public void setPresenter(Presenter presenter) {
-        this.presenter = presenter;
+        super.setPresenter(presenter);
 
         setButtons();
         setRoutesTable();
@@ -158,69 +154,19 @@ public class Editor implements View {
     }
 
     @Override
-    public void setRouteList(List<Route> routes) {
-        routesTable.clear();
-        routesTable.addList(routes);
-        routesTable.cancelSelection();
-    }
-
-    @Override
-    public void updateRoute(Route route) {
-        if (!routesTable.isSelected()) {
-            return;
-        }
-
-        routesTable.updateSelectedRoute(route);
-        routeDataTable.setRoute(route);
-    }
-
-    @Override
-    public void addNewRoute(Route route) {
-        routesTable.addNewRoute(route);
-        routeDataTable.setRoute(route);
-    }
-
-    @Override
-    public void removeRoute() {
-        routesTable.removeSelected();
+    public void setState(List<Route> routes) {
         routeDataTable.clearData();
+        routesTable.setRoutes(routes);
     }
 
     @Override
-    public void cancelSelection() {
-        routesTable.cancelSelection();
-        routeDataTable.clearData();
-    }
-
-    @Override
-    public void setSelectionByName(Route route) {
-        routesTable.setSelectionByName(route.getName());
+    public void setState(List<Route> routes, Route route) {
         routeDataTable.setRoute(route);
+        routesTable.setRoutes(routes, route);
     }
 
     @Override
-    public void setRoute(Route route) {
-        routesTable.setSelectionByName(route.getName());
-        routeDataTable.setRoute(route);
-    }
-
-    @Override
-    public void setUndoEnabled(boolean state) {
-        undoButton.setEnabled(state);
-    }
-
-    @Override
-    public void setRedoEnabled(boolean state) {
-        redoButton.setEnabled(state);
-    }
-
-    @Override
-    public void setSaveButtonEnabled(boolean state) {
-        saveButton.setEnabled(state);
-    }
-
-    @Override
-    public void setRemoveButtonEnabled(boolean state) {
-        removeSelectedRouteButton.setEnabled(state);
+    public void warningMessage(String text) {
+        JOptionPane.showMessageDialog(null, text);
     }
 }
