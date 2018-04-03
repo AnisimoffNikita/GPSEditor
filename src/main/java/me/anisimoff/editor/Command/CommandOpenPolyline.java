@@ -33,11 +33,10 @@ public class CommandOpenPolyline extends Command {
             return false;
         }
 
-        ArrayList<Point> path = null;
+        ArrayList<Point> path;
         try {
             path = new ArrayList<>(PolylineEncoder.decode(polyline));
         } catch (PolylineEncoderException e) {
-            e.printStackTrace();
             return false;
         }
 
