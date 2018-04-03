@@ -1,11 +1,23 @@
 version '1.0-SNAPSHOT'
 
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.3'
+    }
+}
+
+apply plugin: 'com.github.johnrengelman.shadow'
+
 apply plugin: 'java'
 apply plugin: 'application'
 
 sourceCompatibility = 1.8
 
 mainClassName = 'me.anisimoff.editor.App'
+
 
 repositories {
     mavenCentral()
@@ -19,10 +31,6 @@ dependencies {
     compile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.21.0.1'
 }
 
-task copyDependencies(type: Copy) {
-    from configurations.compile
-    into 'dependencies'
-}
 
 jar {
     manifest.attributes(
@@ -30,3 +38,4 @@ jar {
             "Class-Path": configurations.compile.collect { it.getName()}.join(' ')
     )
 }
+

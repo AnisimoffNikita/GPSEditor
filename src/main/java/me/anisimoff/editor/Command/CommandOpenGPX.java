@@ -28,7 +28,6 @@ public class CommandOpenGPX extends Command {
         try {
             route = GPXReader.parse(opened);
         } catch (GPXParseException e) {
-            //TODO: Warning
             return false;
         }
 

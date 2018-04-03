@@ -3,14 +3,16 @@ package me.anisimoff.editor.View;
 import me.anisimoff.editor.Route;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
+import java.text.DateFormat;
+import java.util.*;
 import java.util.List;
-import java.util.Vector;
 
 public class RoutesTable extends JPanel {
     private JTable table;
@@ -67,6 +69,24 @@ public class RoutesTable extends JPanel {
         }
     }
 
+    private class DateCellRenderer extends DefaultTableCellRenderer {
+        DateFormat formatter;
+
+        DateCellRenderer() {
+            super();
+        }
+
+        public void setValue(Object value) {
+            if (formatter == null) {
+                String systemLocale = System.getProperty("user.language");
+                Locale locale = new Locale(systemLocale);
+                formatter = DateFormat.getDateInstance(DateFormat.MEDIUM, locale);
+            }
+            setText((value == null) ? "" : formatter.format(value));
+        }
+    }
+
+
     public RoutesTable() {
         super();
         setLayout(new BorderLayout());
@@ -77,6 +97,7 @@ public class RoutesTable extends JPanel {
         tableSelectedListeners = new ArrayList<>();
 
         table.setModel(new DataModel());
+        table.getColumnModel().getColumn(2).setCellRenderer(new DateCellRenderer());
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         MouseListener[] l = table.getMouseListeners();

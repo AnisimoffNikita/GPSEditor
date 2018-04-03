@@ -1,0 +1,28 @@
+Format: 1.8
+Date: Wed, 28 Mar 2018 16:41:32 +0300
+Source: gpseditor
+Binary: gpseditor
+Architecture: source amd64
+Version: 1.0-1
+Distribution: unstable
+Urgency: medium
+Maintainer: Anisimoff Nikita <anisimoff.nikita@gmail.com>
+Changed-By: Anisimoff Nikita <anisimoff.nikita@gmail.com>
+Description:
+ gpseditor  - <insert up to 60 chars description>
+Changes:
+ gpseditor (1.0-1) unstable; urgency=medium
+ .
+   * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+Checksums-Sha1:
+ 6f9a7bf16a93e602b49efed1e821aac3c1d6cc30 702 gpseditor_1.0-1.dsc
+ 9869294c1fce825fa52c208f82ebde492c3baf96 8199115 gpseditor_1.0-1.tar.gz
+ 27006f074ee249c597531d5d57029b84bcd8639c 8165442 gpseditor_1.0-1_amd64.deb
+Checksums-Sha256:
+ 9a92bce0a7c48d18fbf3f2077e62485c6d27428f0e07700a434fbdfe76240426 702 gpseditor_1.0-1.dsc
+ eb588f81315060c1896efcb325e3e1ea06a27f897fe7a337a897452b7a56aa97 8199115 gpseditor_1.0-1.tar.gz
+ 9085f89fa3f884f3b5f2c5d34bc1177597c251dd94b65022c17f475405e54f58 8165442 gpseditor_1.0-1_amd64.deb
+Files:
+ a4618e354633b97b348b2e52dadead3b 702 unknown optional gpseditor_1.0-1.dsc
+ c4629c93b40ab2c098371ea09346df6e 8199115 unknown optional gpseditor_1.0-1.tar.gz
+ 28ac39273e6d5bcd9e6f10ace97f09fd 8165442 unknown optional gpseditor_1.0-1_amd64.deb

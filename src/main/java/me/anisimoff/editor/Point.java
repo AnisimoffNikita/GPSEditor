@@ -1,6 +1,7 @@
 package me.anisimoff.editor;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Point implements Serializable {
     private Double latitude;
@@ -39,5 +40,19 @@ public class Point implements Serializable {
         distance = Math.pow(distance, 2);
 
         return Math.sqrt(distance);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        final double eps = 1e-6;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        return Math.abs(this.longitude - longitude) < eps &&
+                Math.abs(this.latitude - latitude) < eps;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(latitude, longitude);
     }
 }

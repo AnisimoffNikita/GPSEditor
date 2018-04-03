@@ -28,7 +28,7 @@ public class SimplePresenter implements Presenter {
         if (!invoker.executeCommand(new CommandNew(model))) {
             view.warningMessage("Cannot create new route");
         }
-        view.setState(model.loadAllRoutes(), model.getRoute());
+        setState();
     }
 
     @Override
@@ -37,7 +37,7 @@ public class SimplePresenter implements Presenter {
         if (!invoker.executeCommand(new CommandOpenGPX(model, opened))) {
             view.warningMessage("Cannot open gpx");
         }
-        view.setState(model.loadAllRoutes(), model.getRoute());
+        setState();
     }
 
     @Override
@@ -46,52 +46,72 @@ public class SimplePresenter implements Presenter {
         if (!invoker.executeCommand(new CommandOpenPolyline(model, opened))) {
             view.warningMessage("Cannot open polyline");
         }
-        view.setState(model.loadAllRoutes(), model.getRoute());
+        setState();
     }
 
     @Override
     public void removeSelectedRoute() {
+        if(model.isNone()) {
+            view.warningMessage("No route to edit");
+            return;
+        }
         CommandInvoker invoker = model.getCommandInvoker();
         if (!invoker.executeCommand(new CommandRemoveRoute(model))) {
             view.warningMessage("Cannot remove route");
         }
-        view.setState(model.loadAllRoutes());
+        setState();
     }
 
     @Override
     public void addPointAfterSelected(int index) {
+        if(model.isNone()) {
+            view.warningMessage("No route to edit");
+            return;
+        }
         CommandInvoker invoker = model.getCommandInvoker();
         if (!invoker.executeCommand(new CommandAddPoint(model, index))) {
             view.warningMessage("Cannot add point");
         }
-        view.setState(model.loadAllRoutes(), model.getRoute());
+        setState();
     }
 
     @Override
     public void removeSelectedPoint(int index) {
+        if(model.isNone()) {
+            view.warningMessage("No route to edit");
+            return;
+        }
         CommandInvoker invoker = model.getCommandInvoker();
         if (!invoker.executeCommand(new CommandRemovePoint(model, index))) {
             view.warningMessage("Cannot remove point");
         }
-        view.setState(model.loadAllRoutes(), model.getRoute());
+        setState();
     }
 
     @Override
     public void rename(String name) {
+        if(model.isNone()) {
+            view.warningMessage("No route to rename");
+            return;
+        }
         CommandInvoker invoker = model.getCommandInvoker();
         if (!invoker.executeCommand(new CommandRenameRoute(model, name))) {
             view.warningMessage("Cannot rename route");
         }
-        view.setState(model.loadAllRoutes(), model.getRoute());
+        setState();
     }
 
     @Override
     public void saveRoute() {
+        if(model.isNone()) {
+            view.warningMessage("No route to save");
+            return;
+        }
         CommandInvoker invoker = model.getCommandInvoker();
         if (!invoker.executeCommand(new CommandSaveRoute(model))) {
-            view.warningMessage("Cannot rename route");
+            view.warningMessage("Cannot save route");
         }
-        view.setState(model.loadAllRoutes(), model.getRoute());
+        setState();
     }
 
 
@@ -131,7 +151,6 @@ public class SimplePresenter implements Presenter {
         return route.isModified();
     }
 
-
     @Override
     public void edited(int index, Point point) {
         CommandInvoker invoker = model.getCommandInvoker();
@@ -158,5 +177,12 @@ public class SimplePresenter implements Presenter {
         return needSave();
     }
 
+    private void setState() {
+        if (!model.isNone()) {
+            view.setState(model.loadAllRoutes(), model.getRoute());
+        } else {
+            view.setState(model.loadAllRoutes());
+        }
+    }
 
 }

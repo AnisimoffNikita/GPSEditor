@@ -3,6 +3,7 @@ package me.anisimoff.editor.Model;
 import me.anisimoff.editor.Constants;
 import me.anisimoff.editor.Route;
 import me.anisimoff.editor.Utils.PolylineEncoder;
+import me.anisimoff.editor.Utils.PolylineEncoderException;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -108,7 +109,7 @@ class Database {
                         new Date(rs.getLong(DATE_COLUMN)));
             }
 
-        } catch (SQLException e) {
+        } catch (SQLException | PolylineEncoderException e) {
             route = null;
         }
 
@@ -145,7 +146,7 @@ class Database {
                         new Date(rs.getLong(DATE_COLUMN))));
             }
 
-        } catch (SQLException ignored) {
+        } catch (SQLException | PolylineEncoderException ignored) {
         }
 
         return routes;

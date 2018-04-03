@@ -1,0 +1,71 @@
+ dpkg-buildpackage -rfakeroot -D -us -uc
+dpkg-buildpackage: пакет исходных текстов gpseditor
+dpkg-buildpackage: версия исходных текстов 1.0-1
+dpkg-buildpackage: дистрибутив исходного кода unstable
+dpkg-buildpackage: исходные тексты изменены Anisimoff Nikita <anisimoff.nikita@gmail.com>
+ dpkg-source --before-build gpseditor-1.0
+dpkg-buildpackage: архитектура узла amd64
+ fakeroot debian/rules clean
+dh clean 
+   dh_testdir
+   dh_auto_clean
+   dh_clean
+ dpkg-source -b gpseditor-1.0
+dpkg-source: инфо: используется формат исходника «1.0»
+dpkg-source: инфо: сборка gpseditor в gpseditor_1.0-1.tar.gz
+dpkg-source: инфо: сборка gpseditor в gpseditor_1.0-1.dsc
+ debian/rules build
+dh build 
+   dh_testdir
+   dh_update_autotools_config
+   dh_auto_configure
+   dh_auto_build
+   dh_auto_test
+ fakeroot debian/rules binary
+dh binary 
+   dh_testroot
+   dh_prep
+   dh_auto_install
+   dh_install
+   dh_installdocs
+   dh_installchangelogs
+   dh_perl
+   dh_link
+   dh_strip_nondeterminism
+   dh_compress
+   dh_fixperms
+   dh_strip
+   dh_makeshlibs
+   dh_shlibdeps
+   dh_installdeb
+   dh_gencontrol
+dpkg-gencontrol: предупреждение: Depends поле из пакета gpseditor: неизвестная подстановочная переменная ${shlibs:Depends}
+   dh_md5sums
+   dh_builddeb
+dpkg-deb: сборка пакета «gpseditor» в файл «../gpseditor_1.0-1_amd64.deb».
+ dpkg-genchanges  >../gpseditor_1.0-1_amd64.changes
+dpkg-genchanges: в закачку включён весь исходный код
+ dpkg-source --after-build gpseditor-1.0
+dpkg-buildpackage: закачка всего; родной пакет Debian (включены все пакеты исходного кода)
+Now running lintian...
+E: gpseditor changes: bad-distribution-in-changes-file unstable
+W: gpseditor source: native-package-with-dash-version
+W: gpseditor source: dh-make-template-in-source debian/gpseditor.doc-base.EX
+W: gpseditor source: superfluous-clutter-in-homepage <insert the upstream URL, if relevant>
+W: gpseditor source: bad-homepage <insert the upstream URL, if relevant>
+W: gpseditor source: space-in-std-shortname-in-dep5-copyright <special license> (paragraph at line 5)
+W: gpseditor source: out-of-date-standards-version 3.9.6 (current is 3.9.7)
+W: gpseditor: wrong-bug-number-in-closes l3:#nnnn
+W: gpseditor: new-package-should-close-itp-bug
+E: gpseditor: changelog-is-dh_make-template
+E: gpseditor: helper-templates-in-copyright
+W: gpseditor: copyright-has-url-from-dh_make-boilerplate
+E: gpseditor: copyright-contains-dh_make-todo-boilerplate
+W: gpseditor: readme-debian-contains-debmake-template
+E: gpseditor: description-is-dh_make-template
+E: gpseditor: section-is-dh_make-template
+W: gpseditor: superfluous-clutter-in-homepage <insert the upstream URL, if relevant>
+W: gpseditor: bad-homepage <insert the upstream URL, if relevant>
+E: gpseditor: missing-dep-on-jarwrapper
+W: gpseditor: binary-without-manpage usr/bin/gpseditor.jar
+Finished running lintian.

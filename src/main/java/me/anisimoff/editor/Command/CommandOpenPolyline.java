@@ -4,6 +4,7 @@ import me.anisimoff.editor.*;
 import me.anisimoff.editor.Model.Model;
 import me.anisimoff.editor.Model.State;
 import me.anisimoff.editor.Utils.PolylineEncoder;
+import me.anisimoff.editor.Utils.PolylineEncoderException;
 import me.anisimoff.editor.Utils.Utils;
 
 import java.io.File;
@@ -32,7 +33,13 @@ public class CommandOpenPolyline extends Command {
             return false;
         }
 
-        ArrayList<Point> path = new ArrayList<>(PolylineEncoder.decode(polyline));
+        ArrayList<Point> path = null;
+        try {
+            path = new ArrayList<>(PolylineEncoder.decode(polyline));
+        } catch (PolylineEncoderException e) {
+            e.printStackTrace();
+            return false;
+        }
 
         Route route = new Route(opened.getName(), path, new Date());
 

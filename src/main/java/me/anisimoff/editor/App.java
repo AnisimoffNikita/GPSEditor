@@ -7,6 +7,9 @@ import me.anisimoff.editor.View.Editor;
 import me.anisimoff.editor.View.View;
 
 import javax.swing.*;
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 class App {
 
@@ -21,6 +24,7 @@ class App {
             Utils.createConfigDir();
             View view = new Editor();
             view.setPresenter(new SimplePresenter(view, new DatabaseModel()));
+
         });
     }
 

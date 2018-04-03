@@ -23,6 +23,7 @@ public class Editor extends View {
     private RoutesTable routesTable;
     private RouteDataTable routeDataTable;
 
+
     public Editor() {
         setupGUI();
     }
@@ -31,6 +32,7 @@ public class Editor extends View {
         JFrame frame = new JFrame("GPS Editor");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setContentPane(mainPanel);
+        frame.setResizable(false);
         frame.pack();
         frame.setVisible(true);
     }
@@ -260,7 +262,7 @@ public class Editor extends View {
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.weightx = 1.0;
+        gbc.weightx = 0.8;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.insets = new Insets(5, 5, 5, 5);
@@ -269,7 +271,7 @@ public class Editor extends View {
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
         gbc.gridy = 0;
-        gbc.weightx = 1.0;
+        gbc.weightx = 0.3;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.insets = new Insets(5, 5, 5, 5);
