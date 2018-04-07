@@ -19,6 +19,7 @@ class App {
                 Class.forName("org.sqlite.JDBC");
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
+                System.exit(1);
             }
 
             Utils.createConfigDir();

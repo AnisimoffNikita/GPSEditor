@@ -7,11 +7,16 @@ import me.anisimoff.editor.Route;
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
+import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -99,6 +104,7 @@ public class RouteDataTable extends JPanel {
         return panel;
     }
 
+
     private class DataModel extends DefaultTableModel {
         final String[] columns = {"Latitude", "Longitude"};
 
@@ -113,7 +119,6 @@ public class RouteDataTable extends JPanel {
         public Class getColumnClass(int c) {
             return getValueAt(0, c).getClass();
         }
-
     }
 
     public RouteDataTable() {
@@ -123,6 +128,7 @@ public class RouteDataTable extends JPanel {
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tableFinishEditingListener = null;
         renameListener = null;
+
 
         table.getModel().addTableModelListener(e -> {
             if (e.getType() == TableModelEvent.UPDATE) {
@@ -163,6 +169,8 @@ public class RouteDataTable extends JPanel {
             StringSelection strSel = new StringSelection(polyline);
             clipboard.setContents(strSel, null);
         });
+
+
     }
 
     public void setRoute(Route route) {
