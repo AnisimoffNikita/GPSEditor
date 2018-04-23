@@ -34,6 +34,7 @@ public class Editor extends View {
         frame.setContentPane(mainPanel);
         frame.setResizable(false);
         frame.pack();
+        frame.setSize(new Dimension(1600, 600));
         frame.setVisible(true);
     }
 
@@ -223,15 +224,28 @@ public class Editor extends View {
         final JPanel panel1 = new JPanel();
         panel1.setLayout(new GridBagLayout());
         mainPanel.add(panel1, BorderLayout.CENTER);
-        final JPanel panel2 = new JPanel();
-        panel2.setLayout(new GridBagLayout());
+        routesTable = new RoutesTable();
         GridBagConstraints gbc;
         gbc = new GridBagConstraints();
-        gbc.gridx = 2;
+        gbc.gridx = 0;
         gbc.gridy = 0;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.ipadx = 250;
+        gbc.insets = new Insets(5, 5, 5, 5);
+        panel1.add(routesTable.$$$getRootComponent$$$(), gbc);
+        routeDataTable = new RouteDataTable();
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.insets = new Insets(5, 5, 5, 5);
-        panel1.add(panel2, gbc);
+        panel1.add(routeDataTable.$$$getRootComponent$$$(), gbc);
+        final JPanel panel2 = new JPanel();
+        panel2.setLayout(new GridBagLayout());
+        mainPanel.add(panel2, BorderLayout.WEST);
         panel2.setBorder(BorderFactory.createTitledBorder("Edit"));
         addPointAfterSelectedButton = new JButton();
         addPointAfterSelectedButton.setText("Add point after selected");
@@ -258,24 +272,6 @@ public class Editor extends View {
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.VERTICAL;
         panel2.add(spacer1, gbc);
-        routesTable = new RoutesTable();
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.weightx = 0.8;
-        gbc.weighty = 1.0;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.insets = new Insets(5, 5, 5, 5);
-        panel1.add(routesTable.$$$getRootComponent$$$(), gbc);
-        routeDataTable = new RouteDataTable();
-        gbc = new GridBagConstraints();
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        gbc.weightx = 0.3;
-        gbc.weighty = 1.0;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.insets = new Insets(5, 5, 5, 5);
-        panel1.add(routeDataTable.$$$getRootComponent$$$(), gbc);
     }
 
     /**

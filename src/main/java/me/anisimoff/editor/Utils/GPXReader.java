@@ -1,9 +1,6 @@
 package me.anisimoff.editor.Utils;
 
-import io.jenetics.jpx.GPX;
-import io.jenetics.jpx.Length;
-import io.jenetics.jpx.Track;
-import io.jenetics.jpx.TrackSegment;
+import io.jenetics.jpx.*;
 import me.anisimoff.editor.Point;
 import me.anisimoff.editor.Route;
 
@@ -13,14 +10,17 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class GPXReader {
     static public Route parse(File file) throws GPXParseException {
         String absolutePath = file.getAbsolutePath();
         String filename = file.getName();
         ArrayList<Point> path = new ArrayList<>();
+
         try {
-            List<Track> tracks = GPX.read(absolutePath).getTracks();
+
+            List<Track> tracks = GPX.read(absolutePath, true).getTracks();
             for (Track track : tracks) {
                 for (TrackSegment segment : track.getSegments()) {
                     for (io.jenetics.jpx.Point gpxPoint : segment.getPoints()) {

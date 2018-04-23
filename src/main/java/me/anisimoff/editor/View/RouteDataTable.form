@@ -2,7 +2,7 @@
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="me.anisimoff.editor.View.RouteDataTable">
   <grid id="27dc6" binding="panel" layout-manager="GridBagLayout">
     <constraints>
-      <xy x="20" y="20" width="655" height="400"/>
+      <xy x="20" y="20" width="1352" height="442"/>
     </constraints>
     <properties/>
     <border type="none" title="Route Data"/>
@@ -10,7 +10,7 @@
       <scrollpane id="3a60e">
         <constraints>
           <grid row="2" column="0" row-span="1" col-span="3" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-          <gridbag top="0" left="0" bottom="5" right="0" weightx="1.0" weighty="1.0"/>
+          <gridbag top="0" left="0" bottom="5" right="0" weightx="0.0" weighty="1.0" ipadx="300"/>
         </constraints>
         <properties/>
         <border type="none"/>
@@ -59,6 +59,15 @@
         </constraints>
         <properties/>
       </component>
+      <grid id="b0530" binding="chartPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+        <constraints>
+          <grid row="0" column="3" row-span="3" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="1.0" weighty="0.0" ipadx="1000"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children/>
+      </grid>
     </children>
   </grid>
 </form>
