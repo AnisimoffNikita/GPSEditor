@@ -1,9 +1,10 @@
 package me.anisimoff.editor.Model;
 
 import me.anisimoff.editor.Constants;
+import me.anisimoff.editor.Point;
 import me.anisimoff.editor.Route;
-import me.anisimoff.editor.Utils.PolylineEncoder;
-import me.anisimoff.editor.Utils.PolylineEncoderException;
+import me.anisimoff.editor.Utils.Serialize;
+import me.anisimoff.editor.Utils.SerializeException;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -62,11 +63,11 @@ class Database {
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, route.getName());
-            pstmt.setString(2, PolylineEncoder.encode(route.getPath()));
+            pstmt.setString(2, Serialize.serialize(route.getPath()));
             pstmt.setLong(3, route.getDate().getTime());
             pstmt.executeUpdate();
             result = lastInsertedId();
-        } catch (SQLException e) {
+        } catch (SQLException | SerializeException e) {
             result = -1;
         }
 
@@ -79,12 +80,13 @@ class Database {
         boolean result = true;
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            String tes = Serialize.serialize(route.getPath());
             pstmt.setInt(1, route.getId());
             pstmt.setString(2, route.getName());
-            pstmt.setString(3, PolylineEncoder.encode(route.getPath()));
+            pstmt.setString(3, Serialize.serialize(route.getPath()));
             pstmt.setLong(4, route.getDate().getTime());
             pstmt.executeUpdate();
-        } catch (SQLException e) {
+        } catch (SQLException | SerializeException e) {
             result = false;
         }
         return result;
@@ -105,11 +107,11 @@ class Database {
                 route = new Route(
                         rs.getInt(ID_COLUMN),
                         rs.getString(NAME_COLUMN),
-                        PolylineEncoder.decode(rs.getString(POLYLINE_COLUMN)),
+                        Serialize.deserialize(rs.getString(POLYLINE_COLUMN)),
                         new Date(rs.getLong(DATE_COLUMN)));
             }
 
-        } catch (SQLException | PolylineEncoderException e) {
+        } catch (SQLException | SerializeException e) {
             route = null;
         }
 
@@ -142,11 +144,11 @@ class Database {
                 routes.add(new Route(
                         rs.getInt(ID_COLUMN),
                         rs.getString(NAME_COLUMN),
-                        PolylineEncoder.decode(rs.getString(POLYLINE_COLUMN)),
+                        Serialize.deserialize(rs.getString(POLYLINE_COLUMN)),
                         new Date(rs.getLong(DATE_COLUMN))));
             }
 
-        } catch (SQLException | PolylineEncoderException ignored) {
+        } catch (SQLException | SerializeException ignored) {
         }
 
         return routes;

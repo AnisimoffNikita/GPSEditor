@@ -1,6 +1,7 @@
 package me.anisimoff.editor.Utils;
 
 import io.jenetics.jpx.GPX;
+import io.jenetics.jpx.Length;
 import io.jenetics.jpx.Track;
 import io.jenetics.jpx.TrackSegment;
 import me.anisimoff.editor.Point;
@@ -11,6 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 public class GPXReader {
     static public Route parse(File file) throws GPXParseException {
@@ -22,8 +24,14 @@ public class GPXReader {
             for (Track track : tracks) {
                 for (TrackSegment segment : track.getSegments()) {
                     for (io.jenetics.jpx.Point gpxPoint : segment.getPoints()) {
+                        Optional<Length> mElevation = gpxPoint.getElevation();
+                        Double elevation = null;
+                        if (mElevation.isPresent()) {
+                            elevation = mElevation.get().doubleValue();
+                        }
                         path.add(new Point(gpxPoint.getLatitude().doubleValue(),
-                                           gpxPoint.getLongitude().doubleValue()));
+                                           gpxPoint.getLongitude().doubleValue(),
+                                           elevation));
                     }
                 }
             }
