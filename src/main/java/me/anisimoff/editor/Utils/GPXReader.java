@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import io.jenetics.jpx.GPX.Reader.Mode;
+import io.jenetics.jpx.GPX.Version;
+
 public class GPXReader {
     static public Route parse(File file) throws GPXParseException {
         String absolutePath = file.getAbsolutePath();
@@ -19,22 +22,40 @@ public class GPXReader {
         ArrayList<Point> path = new ArrayList<>();
 
         try {
+            GPX gpx = GPX.reader(Version.V10, Mode.STRICT).read(absolutePath);
+            final List<WayPoint> points = gpx.tracks()
+                    .flatMap(Track::segments)
+                    .flatMap(TrackSegment::points)
+                    .collect(Collectors.toList());
 
-            List<Track> tracks = GPX.read(absolutePath, true).getTracks();
-            for (Track track : tracks) {
-                for (TrackSegment segment : track.getSegments()) {
-                    for (io.jenetics.jpx.Point gpxPoint : segment.getPoints()) {
-                        Optional<Length> mElevation = gpxPoint.getElevation();
-                        Double elevation = null;
-                        if (mElevation.isPresent()) {
-                            elevation = mElevation.get().doubleValue();
-                        }
-                        path.add(new Point(gpxPoint.getLatitude().doubleValue(),
-                                           gpxPoint.getLongitude().doubleValue(),
-                                           elevation));
-                    }
+            //List<Track> tracks = GPX.read(absolutePath).getTracks();
+
+            for (WayPoint point : points) {
+                Optional<Length> mElevation = point.getElevation();
+                Double elevation = null;
+                if (mElevation.isPresent()) {
+                    elevation = mElevation.get().doubleValue();
                 }
+                path.add(new Point(point.getLatitude().doubleValue(),
+                        point.getLongitude().doubleValue(),
+                        elevation));
             }
+
+
+//            for (Track track : tracks) {
+//                for (TrackSegment segment : track.getSegments()) {
+//                    for (io.jenetics.jpx.Point gpxPoint : segment.getPoints()) {
+//                        Optional<Length> mElevation = gpxPoint.getElevation();
+//                        Double elevation = null;
+//                        if (mElevation.isPresent()) {
+//                            elevation = mElevation.get().doubleValue();
+//                        }
+//                        path.add(new Point(gpxPoint.getLatitude().doubleValue(),
+//                                           gpxPoint.getLongitude().doubleValue(),
+//                                           elevation));
+//                    }
+//                }
+//            }
         } catch (IOException e) {
             throw new GPXParseException();
         }

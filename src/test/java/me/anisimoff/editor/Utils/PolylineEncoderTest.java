@@ -33,7 +33,7 @@ public class PolylineEncoderTest {
     }
 
     @Test
-    public void decode() {
+    public void decode() throws PolylineEncoderException {
         assertEquals(PolylineEncoder.decode(null), null);
 
         ArrayList<Point> points = new ArrayList<>();

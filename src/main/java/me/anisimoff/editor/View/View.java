@@ -19,4 +19,5 @@ public abstract class View {
     public abstract void setState(List<Route> routes, Route route);
 
     public abstract void warningMessage(String text);
+
 }
