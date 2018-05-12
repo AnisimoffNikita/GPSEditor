@@ -20,14 +20,6 @@ public class Route  implements Serializable {
         this.date = new Date();
     }
 
-//    @Override
-//    public boolean equals(Object obj) {
-//        return getClass() == obj.getClass() &&
-//                name.equals(((Route) obj).name) &&
-//                path.equals(((Route) obj).path) &&
-//                date.equals(((Route) obj).date);
-//    }
-
     public Route(String name, ArrayList<Point> path, Date date) {
         this.name = name;
         this.path = path;
@@ -92,4 +84,7 @@ public class Route  implements Serializable {
     }
 
 
+    void action(Module visitor) {
+        visitor.action(this);
+    }
 }

@@ -32,4 +32,6 @@ public interface Presenter extends
     void removeSelectedPoint(int index);
 
     boolean needSave();
+
+    void newModule(File jar);
 }

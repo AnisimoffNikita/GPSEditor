@@ -5,6 +5,7 @@ public class Constants {
 
     private static final Enviroment mode = Enviroment.TEST;
     public static String configPath;
+    public static String modulePath;
     public static final int CANNOT_CREATE_CONFIG_FOLDER = 1;
     public static final int CANNOT_CREATE_DATABASE = 2;
     public static final String UNTITLED = "untitled";
@@ -21,5 +22,7 @@ public class Constants {
                 configPath = String.format("%s/.config/GPSEditor/", System.getProperty("user.home"));
                 break;
         }
+        modulePath = configPath + "modules/";
     }
+
 }

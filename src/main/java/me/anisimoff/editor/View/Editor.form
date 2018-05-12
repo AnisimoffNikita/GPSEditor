@@ -2,7 +2,7 @@
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="me.anisimoff.editor.View.Editor">
   <grid id="27dc6" binding="mainPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
     <constraints>
-      <xy x="20" y="52" width="1169" height="486"/>
+      <xy x="20" y="52" width="1849" height="486"/>
     </constraints>
     <properties>
       <opaque value="true"/>
@@ -63,6 +63,12 @@
               <text value="Redo"/>
             </properties>
           </component>
+          <component id="c711a" class="javax.swing.JButton" binding="loadModuleButton">
+            <constraints/>
+            <properties>
+              <text value="Load Module"/>
+            </properties>
+          </component>
         </children>
       </toolbar>
       <grid id="ab0fd" layout-manager="GridBagLayout">
@@ -109,10 +115,19 @@
           </component>
           <vspacer id="d2dc0">
             <constraints>
-              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
               <gridbag weightx="0.0" weighty="1.0"/>
             </constraints>
           </vspacer>
+          <grid id="4eb78" binding="modulesPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+            <constraints>
+              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties/>
+            <border type="none" title="Modules"/>
+            <children/>
+          </grid>
         </children>
       </grid>
     </children>

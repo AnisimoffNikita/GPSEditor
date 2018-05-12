@@ -1,5 +1,6 @@
 package me.anisimoff.editor.View;
 
+import me.anisimoff.editor.Module;
 import me.anisimoff.editor.Presenter.Presenter;
 import me.anisimoff.editor.Route;
 
@@ -22,6 +23,9 @@ public class Editor extends View {
     private JButton removeSelectedRouteButton;
     private RoutesTable routesTable;
     private RouteDataTable routeDataTable;
+    private JButton loadModuleButton;
+    private JPanel modulesPanel;
+    private Route route;
 
 
     public Editor() {
@@ -104,6 +108,22 @@ public class Editor extends View {
             int index = routeDataTable.getSelectedIndex();
             presenter.removeSelectedPoint(index);
         });
+
+        loadModuleButton.addActionListener(e -> {
+            File opened = openDialog(new FileFilter() {
+                public String getDescription() {
+                    return "Jar file (*.jar)";
+                }
+
+                public boolean accept(File f) {
+                    return f.isDirectory() || f.getName().toLowerCase().endsWith(".jar");
+                }
+            }, "Open Jar");
+
+            if (opened != null) {
+                presenter.newModule(opened);
+            }
+        });
     }
 
     private void setRoutesTable() {
@@ -161,17 +181,44 @@ public class Editor extends View {
     public void setState(List<Route> routes) {
         routeDataTable.clearData();
         routesTable.setRoutes(routes);
+        this.route = null;
     }
 
     @Override
     public void setState(List<Route> routes, Route route) {
         routeDataTable.setRoute(route);
         routesTable.setRoutes(routes, route);
+        this.route = route;
     }
+
+    @Override
+    public void setModule(List<Module> module) {
+        this.modules = module;
+        updateModules();
+    }
+
 
     @Override
     public void warningMessage(String text) {
         JOptionPane.showMessageDialog(null, text);
+    }
+
+    private void updateModules() {
+        modulesPanel.removeAll();
+        modulesPanel.revalidate();
+        modulesPanel.setLayout(new BoxLayout(modulesPanel, BoxLayout.Y_AXIS));
+
+        for (Module module : modules) {
+            JButton button = new JButton();
+            String name = module.getName();
+            button.setText(name);
+            button.addActionListener(e -> {
+                if (route != null)
+                    module.action(route);
+            });
+            modulesPanel.add(button);
+        }
+        modulesPanel.revalidate();
     }
 
     {
@@ -221,6 +268,9 @@ public class Editor extends View {
         redoButton.setEnabled(true);
         redoButton.setText("Redo");
         toolBar1.add(redoButton);
+        loadModuleButton = new JButton();
+        loadModuleButton.setText("Load Module");
+        toolBar1.add(loadModuleButton);
         final JPanel panel1 = new JPanel();
         panel1.setLayout(new GridBagLayout());
         mainPanel.add(panel1, BorderLayout.CENTER);
@@ -268,10 +318,18 @@ public class Editor extends View {
         final JPanel spacer1 = new JPanel();
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 2;
+        gbc.gridy = 3;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.VERTICAL;
         panel2.add(spacer1, gbc);
+        modulesPanel = new JPanel();
+        modulesPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.fill = GridBagConstraints.BOTH;
+        panel2.add(modulesPanel, gbc);
+        modulesPanel.setBorder(BorderFactory.createTitledBorder("Modules"));
     }
 
     /**

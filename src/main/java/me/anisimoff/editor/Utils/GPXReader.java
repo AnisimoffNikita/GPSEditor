@@ -41,21 +41,6 @@ public class GPXReader {
                         elevation));
             }
 
-
-//            for (Track track : tracks) {
-//                for (TrackSegment segment : track.getSegments()) {
-//                    for (io.jenetics.jpx.Point gpxPoint : segment.getPoints()) {
-//                        Optional<Length> mElevation = gpxPoint.getElevation();
-//                        Double elevation = null;
-//                        if (mElevation.isPresent()) {
-//                            elevation = mElevation.get().doubleValue();
-//                        }
-//                        path.add(new Point(gpxPoint.getLatitude().doubleValue(),
-//                                           gpxPoint.getLongitude().doubleValue(),
-//                                           elevation));
-//                    }
-//                }
-//            }
         } catch (IOException e) {
             throw new GPXParseException();
         }

@@ -1,24 +1,74 @@
 package me.anisimoff.editor.Presenter;
 
+import io.methvin.watcher.DirectoryChangeEvent;
 import me.anisimoff.editor.Command.*;
+import me.anisimoff.editor.Constants;
 import me.anisimoff.editor.Model.Model;
+import me.anisimoff.editor.Module;
 import me.anisimoff.editor.Point;
 import me.anisimoff.editor.Route;
 import me.anisimoff.editor.Model.State;
 import me.anisimoff.editor.View.View;
 
 import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.nio.file.*;
+import java.util.ArrayList;
+import java.io.IOException;
+import java.nio.file.Path;
+
+import io.methvin.watcher.DirectoryChangeListener;
+import io.methvin.watcher.DirectoryWatcher;
+
+import static io.methvin.watcher.DirectoryChangeEvent.EventType.*;
+
 
 public class SimplePresenter implements Presenter {
 
     private final View view;
     private final Model model;
 
+    private ArrayList<Module> modules;
+
     public SimplePresenter(View view, Model model) {
         this.view = view;
         this.model = model;
+        this.modules = new ArrayList<>();
+        setState();
 
-        view.setState(model.loadAllRoutes());
+        try {
+            DirectoryWatcher.create(Paths.get(Constants.modulePath), event -> {
+                modules.clear();
+                switch (event.eventType()){
+                    case CREATE:
+                    case DELETE:
+                        File folder = new File(Constants.modulePath);
+                        File[] listOfFiles = folder.listFiles();
+
+                        for (int i = 0; i < (listOfFiles != null ? listOfFiles.length : 0); i++) {
+                            if (listOfFiles[i].isFile()) {
+                                String name = listOfFiles[i].getName();
+                                try {
+                                    if (name.substring(name.lastIndexOf(".") + 1).equals("jar")){
+                                        newModule2(listOfFiles[i]);
+                                    }
+                                } catch (Exception e) {
+                                    return ;
+                                }
+                            }
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }).watchAsync();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -177,6 +227,17 @@ public class SimplePresenter implements Presenter {
         return needSave();
     }
 
+    @Override
+    public void newModule(File jar) {
+        Path src = jar.toPath();
+        Path dst = Paths.get(Constants.modulePath + jar.getName());
+        try {
+            Files.copy(src, dst, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void setState() {
         if (!model.isNone()) {
             view.setState(model.loadAllRoutes(), model.getRoute());
@@ -185,4 +246,29 @@ public class SimplePresenter implements Presenter {
         }
     }
 
+    public void newModule2(File jar) {
+        try
+        {
+            URL url = jar.toURI().toURL();
+
+            Class[] parameters = new Class[]{URL.class};
+
+            URLClassLoader sysLoader = (URLClassLoader)ClassLoader.getSystemClassLoader();
+            Class sysClass = URLClassLoader.class;
+
+            Method method = sysClass.getDeclaredMethod("addURL", parameters);
+            method.setAccessible(true);
+            method.invoke(sysLoader,new Object[]{ url });
+
+            Constructor cs = ClassLoader.getSystemClassLoader().loadClass("SimpleModule").getConstructor();
+            Module instance = (Module)cs.newInstance();
+            modules.add(instance);
+            view.setModule(modules);
+
+        }
+        catch(Exception ex)
+        {
+            System.err.println(ex.getMessage());
+        }
+    }
 }
