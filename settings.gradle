@@ -1,2 +1,5 @@
 rootProject.name = 'GPSEditor'
+include 'ModuleInterface'
+include 'Module'
+include 'Module'
 

@@ -1,30 +1,30 @@
 package me.anisimoff.editor.Presenter;
 
-import io.methvin.watcher.DirectoryChangeEvent;
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import me.anisimoff.editor.Command.*;
 import me.anisimoff.editor.Constants;
 import me.anisimoff.editor.Model.Model;
 import me.anisimoff.editor.Module;
 import me.anisimoff.editor.Point;
-import me.anisimoff.editor.Route;
 import me.anisimoff.editor.Model.State;
 import me.anisimoff.editor.View.View;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.*;
 import java.util.ArrayList;
-import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Enumeration;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
-import io.methvin.watcher.DirectoryChangeListener;
 import io.methvin.watcher.DirectoryWatcher;
-
-import static io.methvin.watcher.DirectoryChangeEvent.EventType.*;
 
 
 public class SimplePresenter implements Presenter {
@@ -39,6 +39,7 @@ public class SimplePresenter implements Presenter {
         this.model = model;
         this.modules = new ArrayList<>();
         setState();
+        updateModulesDirectory();
 
         try {
             DirectoryWatcher.create(Paths.get(Constants.modulePath), event -> {
@@ -46,21 +47,7 @@ public class SimplePresenter implements Presenter {
                 switch (event.eventType()){
                     case CREATE:
                     case DELETE:
-                        File folder = new File(Constants.modulePath);
-                        File[] listOfFiles = folder.listFiles();
-
-                        for (int i = 0; i < (listOfFiles != null ? listOfFiles.length : 0); i++) {
-                            if (listOfFiles[i].isFile()) {
-                                String name = listOfFiles[i].getName();
-                                try {
-                                    if (name.substring(name.lastIndexOf(".") + 1).equals("jar")){
-                                        newModule2(listOfFiles[i]);
-                                    }
-                                } catch (Exception e) {
-                                    return ;
-                                }
-                            }
-                        }
+                        updateModulesDirectory();
                         break;
                     default:
                         break;
@@ -68,6 +55,25 @@ public class SimplePresenter implements Presenter {
             }).watchAsync();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+
+    }
+
+    private void updateModulesDirectory() {
+        File folder = new File(Constants.modulePath);
+        File[] listOfFiles = folder.listFiles();
+
+        for (int i = 0; i < (listOfFiles != null ? listOfFiles.length : 0); i++) {
+            if (listOfFiles[i].isFile()) {
+                String name = listOfFiles[i].getName();
+                try {
+                    if (name.substring(name.lastIndexOf(".") + 1).equals("jar")){
+                        addModule(listOfFiles[i]);
+                    }
+                } catch (Exception e) {
+                    return ;
+                }
+            }
         }
 
     }
@@ -246,29 +252,37 @@ public class SimplePresenter implements Presenter {
         }
     }
 
-    public void newModule2(File jar) {
+    private void addModule(File jar) {
         try
         {
-            URL url = jar.toURI().toURL();
 
-            Class[] parameters = new Class[]{URL.class};
+            JarFile jarFile = new JarFile(jar);
+            Enumeration<JarEntry> e = jarFile.entries();
 
-            URLClassLoader sysLoader = (URLClassLoader)ClassLoader.getSystemClassLoader();
-            Class sysClass = URLClassLoader.class;
+            URL[] urls = { new URL("jar:file:" + jar+"!/") };
+            URLClassLoader cl = URLClassLoader.newInstance(urls);
 
-            Method method = sysClass.getDeclaredMethod("addURL", parameters);
-            method.setAccessible(true);
-            method.invoke(sysLoader,new Object[]{ url });
+            while (e.hasMoreElements()) {
+                JarEntry je = e.nextElement();
+                if(je.isDirectory() || !je.getName().endsWith(".class")){
+                    continue;
+                }
 
-            Constructor cs = ClassLoader.getSystemClassLoader().loadClass("SimpleModule").getConstructor();
-            Module instance = (Module)cs.newInstance();
-            modules.add(instance);
-            view.setModule(modules);
+                String className = je.getName().substring(0,je.getName().length()-6);
+                className = className.replace('/', '.');
+                Class c = cl.loadClass(className);
+                if (Module.class.isAssignableFrom(c)) {
+                    Constructor cs = c.getConstructor();
+                    Module instance = (Module)cs.newInstance();
+                    modules.add(instance);
+                    view.setModule(modules);
+                }
+            }
+
 
         }
-        catch(Exception ex)
-        {
-            System.err.println(ex.getMessage());
+        catch (IOException | InstantiationException | NoSuchMethodException | IllegalAccessException | InvocationTargetException | ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
 }
